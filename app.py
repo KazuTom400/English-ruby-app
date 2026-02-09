@@ -267,7 +267,8 @@ if st.session_state['converted']:
     st.subheader("Word形式で保存")
     
     password = st.text_input("利用パスワードを入力（入力後にEnterキーを押してください）", type="password")
-    SECRET_PASS = "ruby2026-march"
+    # ↓ 金庫（Secrets）から "PASSWORD" を取ってくる命令
+    SECRET_PASS = st.secrets["PASSWORD"]
 
     if password == SECRET_PASS:
         st.success("認証されました。")
