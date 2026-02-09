@@ -2,6 +2,7 @@ import streamlit as st
 import alkana
 import jaconv
 import streamlit.components.v1 as components
+import re
 
 # ページ設定
 st.set_page_config(
@@ -11,18 +12,17 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------
-# Google翻訳による誤変換を防ぐための設定（ここを追加！）
+# Google翻訳による誤変換を防ぐための設定
 # ---------------------------------------------------------
 components.html("""
     <script>
-        // ブラウザに「このページは日本語だよ」と伝える
         document.documentElement.setAttribute('lang', 'ja');
     </script>
     <meta name="google" content="notranslate">
 """, height=0)
 
 # ---------------------------------------------------------
-# デザイン調整（ベージュ基調）
+# デザイン調整（ベージュ基調・ユーザー様の指定デザイン）
 # ---------------------------------------------------------
 st.markdown("""
     <style>
@@ -79,6 +79,47 @@ if 'converted' not in st.session_state:
     st.session_state['converted'] = False
 
 # ---------------------------------------------------------
+# 関数：賢いルビ振りロジック（複数形対応版）
+# ---------------------------------------------------------
+def get_kana_smart(word, custom_dict):
+    lower_word = word.lower()
+    
+    # 0. カスタム辞書にあるか確認
+    if lower_word in custom_dict:
+        return custom_dict[lower_word]
+
+    # 1. そのまま辞書検索
+    kana = alkana.get_kana(lower_word)
+    if kana:
+        return kana
+
+    # 2. 語尾が "s" の場合（複数形対応）
+    if lower_word.endswith("s") and len(lower_word) > 1:
+        singular = lower_word[:-1]
+        stem_kana = alkana.get_kana(singular)
+        if stem_kana:
+            if singular.endswith("t"):
+                return stem_kana + "ツ" # cat -> キャッツ
+            elif singular.endswith(("k", "p", "f")):
+                return stem_kana + "ス" # book -> ブックス
+            else:
+                return stem_kana + "ズ" # dog -> ドッグズ
+
+    # 3. "es" の場合
+    if lower_word.endswith("es") and len(lower_word) > 2:
+        singular = lower_word[:-2]
+        stem_kana = alkana.get_kana(singular)
+        if stem_kana:
+            return stem_kana + "イズ" 
+
+    # 4. なければjaconvで無理やり変換（保険）
+    potential_kana = jaconv.alphabet2kana(lower_word)
+    if potential_kana != lower_word:
+        return potential_kana
+        
+    return None
+
+# ---------------------------------------------------------
 # サイドバー
 # ---------------------------------------------------------
 st.sidebar.title("📚 メニュー")
@@ -89,15 +130,13 @@ st.sidebar.info("""
 
 教科書や自作の英文に、読みやすいフリガナ（ルビ）を自動で振ることができます。
 """)
-st.sidebar.caption("Ver 1.9 (No Translate)")
+st.sidebar.caption("Ver 2.0 (Smart Plural Support)")
 
 # ---------------------------------------------------------
 # メインアプリ
 # ---------------------------------------------------------
-# タイトルに translate="no" クラスを付けて念押しで翻訳ガード
 st.markdown('<h1 class="notranslate">📚 英語ルビ振りプリント作成ツール</h1>', unsafe_allow_html=True)
 
-# 使い方
 st.info("""
 **💡 使い方**
 1. 下のボックスに英文を入力して**「ルビ付きテキストを作成する」**を押します。
@@ -109,16 +148,17 @@ st.info("""
 text_input = st.text_area(
     "▼ ここに英文を入力してください", 
     height=150, 
-    value="My name is Ken. I like Sushi and Tempura in Tokyo.",
+    value="My name is Ken. I like Sushi and Tempura in Tokyo. I have two cats.",
     placeholder="教科書の本文や、自作の例文を入力してください。"
 )
 
 # 2. 作成ボタン
 if st.button("ルビ付きテキストを作成する"):
     if text_input:
-        words = text_input.split()
+        # 正規表現で単語と記号をきれいに分ける
+        tokens = re.findall(r"[\w']+|[.,!?;:\"()\-]", text_input)
         
-        # Word用HTML生成
+        # Word用HTML生成（ヘッダー部分）
         html = """
         <html xmlns:o='urn:schemas-microsoft-com:office:office' 
               xmlns:w='urn:schemas-microsoft-com:office:word' 
@@ -146,29 +186,32 @@ if st.button("ルビ付きテキストを作成する"):
         <div class=WordSection1><p class=MsoNormal>
         """
         
+        # カスタム辞書（固有名詞など）
         custom_dict = {
             "i": "アイ", "my": "マイ", "ken": "ケン",
             "tokyo": "トウキョウ", "osaka": "オオサカ", "youtube": "ユーチューブ"
         }
 
-        for word in words:
+        # トークンごとに処理
+        for word in tokens:
+            # 記号や数字はそのまま表示
+            if re.match(r"[^a-zA-Z]", word):
+                html += f"<span>{word} </span>" # 記号の後ろにもスペースを入れるかはお好みで
+                continue
+            
+            # クリーンアップ（念のため）
             clean_word = word.strip(".,!?\"")
-            lower_word = clean_word.lower()
-            kana = ""
+            
+            # 賢いルビ取得関数を呼び出す
+            kana = get_kana_smart(clean_word, custom_dict)
 
-            if lower_word in custom_dict:
-                kana = custom_dict[lower_word]
+            if kana:
+                # 半角カナを全角に変換
+                kana = jaconv.h2z(kana)
+                ruby_tag = f"""<ruby class="notranslate" translate="no"><rb>{clean_word}</rb><rt>{kana}</rt></ruby><span> </span>"""
+                html += ruby_tag
             else:
-                kana = alkana.get_kana(lower_word)
-                if kana is None:
-                    potential_kana = jaconv.alphabet2kana(lower_word)
-                    if potential_kana != lower_word:
-                        kana = potential_kana
-                    else:
-                        kana = ""
-
-            ruby_tag = f"""<ruby class="notranslate" translate="no"><rb>{clean_word}</rb><rt>{kana}</rt></ruby><span> </span>"""
-            html += ruby_tag
+                html += f"<span>{clean_word} </span>"
 
         html += "</p></div></body></html>"
         
