@@ -22,7 +22,7 @@ components.html("""
 """, height=0)
 
 # ---------------------------------------------------------
-# デザイン調整（ベージュ基調・ユーザー様の指定デザイン）
+# デザイン調整
 # ---------------------------------------------------------
 st.markdown("""
     <style>
@@ -79,16 +79,16 @@ if 'converted' not in st.session_state:
     st.session_state['converted'] = False
 
 # ---------------------------------------------------------
-# 関数：賢いルビ振りロジック（複数形対応版）
+# 関数：賢いルビ振りロジック（厳格モード）
 # ---------------------------------------------------------
 def get_kana_smart(word, custom_dict):
     lower_word = word.lower()
     
-    # 0. カスタム辞書にあるか確認
+    # 0. カスタム辞書にあるか確認（最優先）
     if lower_word in custom_dict:
         return custom_dict[lower_word]
 
-    # 1. そのまま辞書検索
+    # 1. 辞書検索
     kana = alkana.get_kana(lower_word)
     if kana:
         return kana
@@ -96,7 +96,14 @@ def get_kana_smart(word, custom_dict):
     # 2. 語尾が "s" の場合（複数形対応）
     if lower_word.endswith("s") and len(lower_word) > 1:
         singular = lower_word[:-1]
-        stem_kana = alkana.get_kana(singular)
+        
+        # 単数形が辞書にあるかチェック
+        stem_kana = None
+        if singular in custom_dict:
+            stem_kana = custom_dict[singular]
+        else:
+            stem_kana = alkana.get_kana(singular)
+            
         if stem_kana:
             if singular.endswith("t"):
                 return stem_kana + "ツ" # cat -> キャッツ
@@ -108,15 +115,18 @@ def get_kana_smart(word, custom_dict):
     # 3. "es" の場合
     if lower_word.endswith("es") and len(lower_word) > 2:
         singular = lower_word[:-2]
-        stem_kana = alkana.get_kana(singular)
+        
+        # 単数形が辞書にあるかチェック
+        stem_kana = None
+        if singular in custom_dict:
+            stem_kana = custom_dict[singular]
+        else:
+            stem_kana = alkana.get_kana(singular)
+
         if stem_kana:
             return stem_kana + "イズ" 
 
-    # 4. なければjaconvで無理やり変換（保険）
-    potential_kana = jaconv.alphabet2kana(lower_word)
-    if potential_kana != lower_word:
-        return potential_kana
-        
+    # ★変更点：辞書になければ、無理に変換せず None を返す（英語のままにする）
     return None
 
 # ---------------------------------------------------------
@@ -130,7 +140,7 @@ st.sidebar.info("""
 
 教科書や自作の英文に、読みやすいフリガナ（ルビ）を自動で振ることができます。
 """)
-st.sidebar.caption("Ver 2.0 (Smart Plural Support)")
+st.sidebar.caption("Ver 2.3 (Strict Mode)")
 
 # ---------------------------------------------------------
 # メインアプリ
@@ -148,7 +158,7 @@ st.info("""
 text_input = st.text_area(
     "▼ ここに英文を入力してください", 
     height=150, 
-    value="My name is Ken. I like Sushi and Tempura in Tokyo. I have two cats.",
+    value="I have a smartphone and an iPad. My friend has two iPhones.",
     placeholder="教科書の本文や、自作の例文を入力してください。"
 )
 
@@ -186,17 +196,27 @@ if st.button("ルビ付きテキストを作成する"):
         <div class=WordSection1><p class=MsoNormal>
         """
         
-        # カスタム辞書（固有名詞など）
+        # ★★★ カスタム辞書（ここにない＆辞書にないものは英語のままになります） ★★★
         custom_dict = {
+            # 基本単語
             "i": "アイ", "my": "マイ", "ken": "ケン",
-            "tokyo": "トウキョウ", "osaka": "オオサカ", "youtube": "ユーチューブ"
+            "tokyo": "トウキョウ", "osaka": "オオサカ", "youtube": "ユーチューブ",
+            
+            # デジタル用語
+            "smartphone": "スマートフォン",
+            "iphone": "アイフォン",
+            "ipad": "アイパッド",
+            "tablet": "タブレット",
+            "internet": "インターネット",
+            "computer": "コンピュータ",
+            "video": "ビデオ"
         }
 
         # トークンごとに処理
         for word in tokens:
             # 記号や数字はそのまま表示
             if re.match(r"[^a-zA-Z]", word):
-                html += f"<span>{word} </span>" # 記号の後ろにもスペースを入れるかはお好みで
+                html += f"<span>{word} </span>" 
                 continue
             
             # クリーンアップ（念のため）
@@ -211,6 +231,7 @@ if st.button("ルビ付きテキストを作成する"):
                 ruby_tag = f"""<ruby class="notranslate" translate="no"><rb>{clean_word}</rb><rt>{kana}</rt></ruby><span> </span>"""
                 html += ruby_tag
             else:
+                # 辞書になかった場合は、ルビを振らずにそのまま表示
                 html += f"<span>{clean_word} </span>"
 
         html += "</p></div></body></html>"
