@@ -202,4 +202,4 @@ if st.session_state['converted']:
     elif password:
         st.error("パスワードが違います。")
         
-    st.caption(f"※Word出力機能のご利用にはパスワードが必要です。[詳細はこちら（Note）](https://note.com)")
+    st.caption(f"※Word出力機能のご利用にはパスワードが必要です。[詳細はこちら（Note）](https://note.com/cool_toad2065/n/n2dd510cc185a?app_launch=false)")
