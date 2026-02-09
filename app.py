@@ -57,11 +57,15 @@ st.markdown("""
         color: white;
     }
 
-    /* 5. タイトル文字 */
+    /* 5. タイトル文字（改行対策の強化版） */
     h1 {
         font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
         color: #5d4037;
         text-align: center;
+        font-size: 1.5rem !important; /* ←さらに小さく！ */
+        white-space: nowrap;          /* ←改行を禁止する魔法 */
+        overflow: hidden;             /* ←はみ出たら隠す（念のため） */
+        text-overflow: ellipsis;      /* ←はみ出たら...にする */
     }
     
     /* インフォメーションボックスの色味調整 */
@@ -139,7 +143,7 @@ st.sidebar.info("""
 
 教科書や自作の英文に、読みやすいフリガナ（ルビ）を自動で振ることができます。
 """)
-st.sidebar.caption("Ver 2.5 (Apostrophe Spacing Fixed)")
+st.sidebar.caption("Ver 2.7 (No Wrap Title)")
 
 # ---------------------------------------------------------
 # メインアプリ
@@ -238,13 +242,8 @@ if st.button("ルビ付きテキストを作成する"):
                 # 半角カナを全角に変換
                 kana = jaconv.h2z(kana)
                 
-                # ★修正ポイント：'sなどの後ろには必ずスペースを入れる！
-                if clean_word.startswith("'"):
-                    # アポストロフィで始まる語（'sなど）の後ろにはスペースを追加
-                    ruby_tag = f"""<ruby class="notranslate" translate="no"><rb>{clean_word}</rb><rt>{kana}</rt></ruby><span> </span>"""
-                else:
-                    # 普通の単語の後ろにもスペースを追加
-                    ruby_tag = f"""<ruby class="notranslate" translate="no"><rb>{clean_word}</rb><rt>{kana}</rt></ruby><span> </span>"""
+                # スペース処理
+                ruby_tag = f"""<ruby class="notranslate" translate="no"><rb>{clean_word}</rb><rt>{kana}</rt></ruby><span> </span>"""
                 html += ruby_tag
             else:
                 html += f"<span>{clean_word} </span>"
