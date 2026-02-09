@@ -151,6 +151,17 @@ st.sidebar.caption("Ver 3.0 (Renamed)")
 # ★★★ タイトルを変更しました（改行タグなし） ★★★
 st.markdown('<h1 class="notranslate">📚 英語ルビ振り文章作成ツール</h1>', unsafe_allow_html=True)
 
+st.markdown("""
+    <div style="text-align: center; color: #5d4037; margin-bottom: 20px;">
+        <strong>英語ルビ振りを30秒で！英文にふり仮名を自動生成。</strong><br>
+        <span style="font-size: 0.9rem;">
+            中学校の先生・保護者向けプリント作成時短ツール。<br>
+            貼り付けるだけでカタカナルビを振り、Word形式で保存・印刷が可能です。<br>
+            面倒な教材準備を圧倒的に効率化します。
+        </span>
+    </div>
+""", unsafe_allow_html=True)
+
 st.info("""
 **💡 使い方**
 1. 下のボックスに英文を入力して**「ルビ付きテキストを作成する」**を押します。
