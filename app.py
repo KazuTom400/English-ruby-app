@@ -126,7 +126,6 @@ def get_kana_smart(word, custom_dict):
         if stem_kana:
             return stem_kana + "イズ" 
 
-    # ★変更点：辞書になければ、無理に変換せず None を返す（英語のままにする）
     return None
 
 # ---------------------------------------------------------
@@ -140,7 +139,7 @@ st.sidebar.info("""
 
 教科書や自作の英文に、読みやすいフリガナ（ルビ）を自動で振ることができます。
 """)
-st.sidebar.caption("Ver 2.3 (Strict Mode)")
+st.sidebar.caption("Ver 2.5 (Apostrophe Spacing Fixed)")
 
 # ---------------------------------------------------------
 # メインアプリ
@@ -158,15 +157,16 @@ st.info("""
 text_input = st.text_area(
     "▼ ここに英文を入力してください", 
     height=150, 
-    value="I have a smartphone and an iPad. My friend has two iPhones.",
+    value="She's my best friend. Tom's cat is cute. I can't swim.",
     placeholder="教科書の本文や、自作の例文を入力してください。"
 )
 
 # 2. 作成ボタン
 if st.button("ルビ付きテキストを作成する"):
     if text_input:
-        # 正規表現で単語と記号をきれいに分ける
-        tokens = re.findall(r"[\w']+|[.,!?;:\"()\-]", text_input)
+        # アポストロフィ(')も区切り文字として扱い、's や 't を分離する
+        # 例: "She's" -> "She", "'s"
+        tokens = re.findall(r"[\w]+|['][\w]+|[.,!?;:\"()\-]", text_input)
         
         # Word用HTML生成（ヘッダー部分）
         html = """
@@ -196,7 +196,7 @@ if st.button("ルビ付きテキストを作成する"):
         <div class=WordSection1><p class=MsoNormal>
         """
         
-        # ★★★ カスタム辞書（ここにない＆辞書にないものは英語のままになります） ★★★
+        # ★★★ カスタム辞書 ★★★
         custom_dict = {
             # 基本単語
             "i": "アイ", "my": "マイ", "ken": "ケン",
@@ -209,13 +209,22 @@ if st.button("ルビ付きテキストを作成する"):
             "tablet": "タブレット",
             "internet": "インターネット",
             "computer": "コンピュータ",
-            "video": "ビデオ"
+            "video": "ビデオ",
+            
+            # 短縮形用辞書
+            "'s": "ズ",   # She's -> シーズ
+            "'t": "ト",   # can't -> キャント
+            "'m": "ム",   # I'm -> アイム
+            "'re": "アー", # You're -> ユーアー
+            "'ve": "ブ",   # I've -> アイブ
+            "'ll": "ル",   # I'll -> アイル
+            "'d": "ド"    # I'd -> アイド
         }
 
         # トークンごとに処理
         for word in tokens:
             # 記号や数字はそのまま表示
-            if re.match(r"[^a-zA-Z]", word):
+            if re.match(r"[^a-zA-Z']", word): 
                 html += f"<span>{word} </span>" 
                 continue
             
@@ -228,10 +237,16 @@ if st.button("ルビ付きテキストを作成する"):
             if kana:
                 # 半角カナを全角に変換
                 kana = jaconv.h2z(kana)
-                ruby_tag = f"""<ruby class="notranslate" translate="no"><rb>{clean_word}</rb><rt>{kana}</rt></ruby><span> </span>"""
+                
+                # ★修正ポイント：'sなどの後ろには必ずスペースを入れる！
+                if clean_word.startswith("'"):
+                    # アポストロフィで始まる語（'sなど）の後ろにはスペースを追加
+                    ruby_tag = f"""<ruby class="notranslate" translate="no"><rb>{clean_word}</rb><rt>{kana}</rt></ruby><span> </span>"""
+                else:
+                    # 普通の単語の後ろにもスペースを追加
+                    ruby_tag = f"""<ruby class="notranslate" translate="no"><rb>{clean_word}</rb><rt>{kana}</rt></ruby><span> </span>"""
                 html += ruby_tag
             else:
-                # 辞書になかった場合は、ルビを振らずにそのまま表示
                 html += f"<span>{clean_word} </span>"
 
         html += "</p></div></body></html>"
