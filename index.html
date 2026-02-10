@@ -1,40 +1,54 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-35R80B7L32"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-XXXXXXXXXX');
-</script>
     <meta charset="UTF-8">
+    <meta name="description" content="先生や保護者のための、英単語に自動でルビを振るプリント作成ツールです。誰でも簡単にルビ付き教材が作成できます。">
     <title>M-Lab Apps | 英語ルビ振りプリント作成ツール</title>
     
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-35R80B7L32"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-35R80B7L32');
+    </script>
+
     <meta property="og:title" content="M-Lab Apps | 英語ルビ振りプリント作成ツール">
     <meta property="og:description" content="先生や保護者のための、英単語に自動でルビを振るプリント作成ツールです。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://m-lab-apps.com">
-    <meta property="og:image" content="https://m-lab-apps.com/ogp-image.png"> <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="M-Lab Apps | 英語ルビ振りプリント作成ツール">
-    <meta name="twitter:description" content="先生や保護者のための、英単語に自動でルビを振るプリント作成ツールです。">
-    <meta name="twitter:image" content="https://m-lab-apps.com/ogp-image.png">
+    <meta property="og:image" content="https://m-lab-apps.com/ogp-image.png">
+    <meta name="twitter:card" content="summary_large_image">
 
     <style>
-      body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+      body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #f8f9fa; }
       iframe { width: 100%; height: 100%; border: none; }
+      footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.9);
+        text-align: center;
+        font-size: 12px;
+        padding: 8px 0;
+        border-top: 1px solid #ddd;
+        z-index: 1000;
+      }
+      footer a { color: #007bff; text-decoration: none; margin-left: 10px; }
     </style>
   </head>
   <body>
-    <iframe src="https://english-ruby-app-5cbmsbsnyfjzf7fydhusza.streamlit.app/?embed=true"></iframe>
-  </body>
-</html>
-<body>
+    <div style="display:none;">
+      <h1>M-Lab Apps | 英語ルビ振りプリント作成ツール</h1>
+      <p>英単語に自動でルビ（読み仮名）を振るプリントを簡単に作成できるウェブアプリです。学校の先生や保護者の方の教材作りをサポートします。完全無料で商用利用も可能です。</p>
+    </div>
+
     <iframe src="https://english-ruby-app-5cbmsbsnyfjzf7fydhusza.streamlit.app/?embed=true"></iframe>
 
-    <footer style="position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.8); text-align: center; font-size: 12px; padding: 5px 0;">
-      © 2026 M-Lab Apps | <a href="privacy.html">プライバシーポリシー</a>
+    <footer>
+      © 2026 M-Lab Apps | 
+      <a href="privacy.html">プライバシーポリシー</a> | 
+      <a href="ここにGoogleフォームのURL" target="_blank">お問い合わせ</a>
     </footer>
   </body>
 </html>
