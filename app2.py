@@ -64,7 +64,7 @@ def text_to_ruby_html(input_text, custom_dict):
     return html_output
 
 # --- メイン UI ---
-st.markdown('<h1 class="notranslate" translate="no">📋 英語ルビ振り【プリント作成モード】</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="notranslate" translate="no">📋 英語ルビ振り【英語の表→ルビ付き英語の表】</h1>', unsafe_allow_html=True)
 
 text_input = st.text_area(
     "▼ 英文を入力、またはExcel・Wordの表から貼り付けてください", 
@@ -136,3 +136,4 @@ if 'table_content' in st.session_state:
         )
     elif password:
         st.error("パスワードが違います。")
+
