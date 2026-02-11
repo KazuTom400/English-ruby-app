@@ -5,39 +5,31 @@ import streamlit.components.v1 as components
 import re
 
 # ページ設定
-st.set_page_config(page_title="英語ルビ振り【表形式】", layout="centered")
+st.set_page_config(page_title="英語ルビ振り【プリント作成モード】", layout="centered")
 
-# ---------------------------------------------------------
-# 【ガード1】ブラウザ全体への翻訳停止命令
-# ---------------------------------------------------------
+# --- デザイン調整（翻訳ガード & UDデジタル教科書体） ---
 st.markdown("""
     <script>
-        // 親ウィンドウ（Streamlit本体）のhtmlタグに翻訳拒否を設定
         var html = window.parent.document.getElementsByTagName('html')[0];
         html.setAttribute('lang', 'ja');
         html.setAttribute('class', 'notranslate');
         html.setAttribute('translate', 'no');
     </script>
     <style>
-    /* 不要なメニューを非表示 */
     #MainMenu {visibility: hidden;}
     header {visibility: hidden;}
     footer {visibility: hidden;}
     .stDeployButton {display:none;}
-    
-    /* 全体のデザインとフォント */
     html, body, [class*="css"], .stMarkdown, .stSlider, .stButton, .stTextArea {
-        font-family: "UD デジタル 教科書体 NK-R", "UD Digi Kyokashotai NK-R", "BIZ UDPGothic", sans-serif !important;
+        font-family: "UD デジタル 教科書体 NK-R", "UD Digi Kyokashotai NK-R", sans-serif !important;
     }
     .stApp { background-color: #f9f4e6; color: #5d4037; }
-    .stButton>button { background-color: #8d6e63; color: white; border-radius: 5px; width: 100%; }
+    .stButton>button { background-color: #8d6e63; color: white; border-radius: 5px; font-weight: bold; width: 100%; }
     h1 { font-family: "UD デジタル 教科書体 NK-B", sans-serif !important; color: #5d4037; text-align: center; margin-top: -50px; }
     </style>
 """, unsafe_allow_html=True)
 
-# ---------------------------------------------------------
-# ロジック関数 (翻訳拒否属性を追加)
-# ---------------------------------------------------------
+# --- ロジック関数 ---
 def get_kana_smart(word, custom_dict):
     lower_word = word.lower()
     if lower_word in custom_dict: return custom_dict[lower_word]
@@ -56,26 +48,28 @@ def text_to_ruby_html(input_text, custom_dict):
     for w in tokens:
         clean_word = w.strip(strip_chars)
         kana = get_kana_smart(clean_word, custom_dict)
-        
-        # 【ガード2】英単語を含むスパンに translate="no" を付与
         if kana:
             z_kana = jaconv.h2z(kana)
             html_output += f'<ruby class="notranslate" translate="no"><rb>{w}</rb><rt>{z_kana}</rt></ruby><span> </span>'
         else:
             html_output += f'<span class="notranslate" translate="no">{w} </span>'
-            
     return html_output
 
 # --- メイン UI ---
-st.markdown('<h1 class="notranslate" translate="no">📋 英語ルビ振り【表形式・詳細調整版】</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="notranslate" translate="no">📋 英語ルビ振り【プリント作成モード】</h1>', unsafe_allow_html=True)
 
-text_input = st.text_area("▼ 英文を1行ずつ入力してください", height=150, 
-                         value="He can jump the highest in this school.\nThis bag is the newest of the five.")
+# ✨ 1. 入力エリアの強化（Excel/Wordコピペへの言及）
+text_input = st.text_area(
+    "▼ 英文を入力、またはExcel・Wordの表から貼り付けてください", 
+    height=200, 
+    placeholder="【時短のコツ】Excelの1列をそのままコピーしてここに貼り付けると、自動で1マスずつに分割されます！",
+    value="He can jump the highest in this school.\nThis bag is the newest of the five."
+)
 
-st.subheader("📏 サイズ調整")
+st.subheader("📏 サイズ・余白調整")
 col1, col2 = st.columns(2)
 with col1:
-    font_size = st.slider("文字の大きさ (pt)", 10, 40, 20)
+    font_size = st.slider("本文の大きさ (pt)", 10, 40, 20)
     ruby_size = st.slider("ルビの大きさ (pt)", 5, 20, 10)
 with col2:
     cell_padding = st.slider("マスの余白 (px)", 0, 50, 10)
@@ -83,18 +77,18 @@ with col2:
 
 custom_dict = {"i": "アイ", "my": "マイ", "'s": "ズ", "'t": "ト"}
 
+# 2. 作成ボタン
 if st.button("ルビ付き表を作成・更新する"):
-    # 【ガード3】生成されるHTML全体のhtmlタグに翻訳拒否を設定
     style = f"""
     <style>
-        body {{ font-family: 'UD デジタル 教科書体 NK-R', sans-serif; }}
+        body {{ font-family: "UD デジタル 教科書体 NK-R", sans-serif; background-color: white; padding: 10px; }}
         table {{ width: 100%; border-collapse: collapse; border: 2px solid black; }}
-        td {{ border: 2px solid black; padding: {cell_padding}px; font-size: {font_size}pt; line-height: {line_height}; background-color: white; }}
+        td {{ border: 2px solid black; padding: {cell_padding}px; font-size: {font_size}pt; line-height: {line_height}; vertical-align: middle; }}
         ruby {{ ruby-align: center; }}
         rt {{ font-size: {ruby_size}pt; color: #000; }}
     </style>
     """
-    html_header = f'<html lang="ja" class="notranslate" translate="no"><head><meta charset="utf-8">{style}</head><body><table border="1">'
+    html_header = f'<html lang="ja" class="notranslate" translate="no"><head><meta charset="utf-8">{style}</head><body><table>'
     
     lines = text_input.strip().split('\n')
     body_content = ""
@@ -105,61 +99,27 @@ if st.button("ルビ付き表を作成・更新する"):
             
     st.session_state['table_content'] = html_header + body_content + "</table></body></html>"
 
-
+# ✨ 3. 結果表示と「コピペ禁止」の注意喚起
 if 'table_content' in st.session_state:
     st.markdown("---")
     st.subheader("👀 プレビュー")
-    components.html(st.session_state['table_content'], height=400, scrolling=True)
+    
+    # 強力な警告メッセージの追加
+    st.warning("⚠️ **注意：プレビューを直接コピー＆ペーストすると、枠線やサイズが正しく反映されません。** 教材として使用する場合は、必ず下のボタンからWordファイルをダウンロードしてください。")
+    
+    components.html(st.session_state['table_content'], height=500, scrolling=True)
     
     st.markdown("---")
-    st.markdown("### 📄 Word形式で保存・利用する")
+    st.subheader("💾 Word形式で保存")
+    password = st.text_input("パスワードを入力してEnter", type="password")
     
-    # Noteへの誘導
-    st.success(f"""
-    **🔑 パスワードと使い方の確認** Wordに表を貼り付ける方法や、必要なパスワードについては  
-    こちらの **[👉 Note解説記事（パスワード案内）](https://note.com/cool_toad2065/n/n2dd510cc185a)** をご確認ください。
-    """)
-    
-    password = st.text_input("利用パスワードを入力してください", type="password")
-    SECRET_PASS = st.secrets.get("PASSWORD", "test")
-
-    if password == SECRET_PASS:
-        st.success("認証に成功しました。")
+    if password == st.secrets.get("PASSWORD", "test"):
+        st.success("認証されました。")
         st.download_button(
             label="📄 表形式のWordファイルをダウンロード",
             data=st.session_state['table_content'],
-            file_name="ruby_table_final.doc",
+            file_name="english_table_print.doc",
             mime="application/msword"
         )
     elif password:
-        st.error("パスワードが正しくありません。Note記事内のパスワードをご確認ください。")
-
-
-st.markdown(f"""
-    <style>
-        .footer-links {{
-            text-align: center;
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid #d7ccc8;
-            font-size: 0.9rem;
-            font-family: sans-serif;
-        }}
-        /* 全てのリンクを強制的に「青色」にし、下線を引く */
-        .footer-links a {{
-            color: #0000ee !important; /* 標準的なリンクの青 */
-            text-decoration: underline !important;
-            margin: 0 10px;
-            font-weight: bold;
-        }}
-        .footer-links a:hover {{
-            color: #ff4500 !important; /* ホバー時はオレンジに */
-        }}
-    </style>
-    <div class="footer-links">
-        <a href="https://m-lab-apps.com/privacy.html" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a> | 
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX6jh-6_EPE6UTPnoWgKQtzpDgxNK5wOM1fGVxdvf2APLW9g/viewform?usp=header" target="_blank">お問い合わせ</a>
-        <p style="margin-top:10px; color: #a1887f; text-decoration: none;">© 2026 M-Lab Apps</p>
-    </div>
-
-""", unsafe_allow_html=True)
+        st.error("パスワードが違います。")
