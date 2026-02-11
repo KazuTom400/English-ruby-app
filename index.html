@@ -2,8 +2,9 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8">
-    <meta name="description" content="【長文・大量対応】どれだけ長い英文でも、一瞬で制限なくルビ（読みがな）を振れる無料ツール。長文読解のプリント作成や教材準備の時間を劇的に短縮します。先生や保護者のための、シンプルで強力な英語学習支援アプリ。">
-    <title>M-Lab Apps | 英語ルビ振りプリント作成ツール</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="【長文・大量対応】英語ルビ振りツール。どれだけ長い文章でも制限なくルビを振れます。先生や保護者のための、シンプルで強力な英語学習支援アプリ。">
+    <title>M-Lab Apps | 英語ルビ振りツール（通常モード）</title>
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-35R80B7L32"></script>
     <script>
@@ -13,42 +14,56 @@
       gtag('config', 'G-35R80B7L32');
     </script>
 
-    <meta property="og:title" content="M-Lab Apps | 英語ルビ振りプリント作成ツール">
-    <meta property="og:description" content="先生や保護者のための、英単語に自動でルビを振るプリント作成ツールです。">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://m-lab-apps.com">
-    <meta property="og:image" content="https://m-lab-apps.com/ogp-image.png">
-    <meta name="twitter:card" content="summary_large_image">
-
     <style>
-      body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #f8f9fa; }
+      /* 全体設定 */
+      body, html { margin: 0; padding: 0; height: 100%; display: flex; flex-direction: column; background-color: #f9f4e6; }
+      
+      /* ✨ 新機能案内バーのスタイル */
+      .mode-switch-bar {
+        background-color: #8d6e63; /* アプリのボタン色と統一 */
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        font-family: "UD デジタル 教科書体 NK-R", sans-serif;
+        font-weight: bold;
+        text-decoration: none;
+        display: block;
+        transition: background-color 0.3s;
+      }
+      .mode-switch-bar:hover {
+        background-color: #6d4c41;
+      }
+
+      /* アプリ表示エリア */
+      .app-container { flex-grow: 1; position: relative; }
       iframe { width: 100%; height: 100%; border: none; }
+      
+      /* フッターリンク */
       footer {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(249, 244, 230, 0.9);
         text-align: center;
         font-size: 12px;
         padding: 8px 0;
-        border-top: 1px solid #ddd;
-        z-index: 1000;
+        border-top: 1px solid #d7ccc8;
       }
-      footer a { color: #007bff; text-decoration: none; margin-left: 10px; }
+      footer a { color: #8d6e63; text-decoration: none; margin: 0 10px; font-weight: bold; }
     </style>
   </head>
   <body>
-    <div style="display:none;">
-      <h1>M-Lab Apps | 長文対応・英語ルビ振りプリント作成ツール</h1>
-      <p>教科書やニュースなど、どれだけ長い文章でも制限なく一括でルビ振りが可能です。先生や保護者の方の教材作りをサポートします。</p>
-    </div>
 
-    <iframe src="https://english-ruby-app-5cbmsbsnyfjzf7fydhusza.streamlit.app/?embed=true"></iframe>
+    <a href="table.html" class="mode-switch-bar">
+        ✨【新機能】1行ずつマスの表にルビを振る「プリント作成モード」はこちらをクリック
+    </a>
+
+    <div class="app-container">
+        <iframe src="https://english-ruby-app-5cbmsbsnyfjzf7fydhusza.streamlit.app/?embed=true"></iframe>
+    </div>
 
     <footer>
       © 2026 M-Lab Apps | 
       <a href="privacy.html">プライバシーポリシー</a> | 
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX6jh-6_EPE6UTPnoWgKQtzpDgxNK5wOM1fGVxdvf2APLW9g/viewform?usp=header" target="_blank">お問い合わせ</a>
+      <a href="ここにGoogleフォームのURL">お問い合わせ</a>
     </footer>
+
   </body>
 </html>
