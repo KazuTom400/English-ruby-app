@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 import re
 
 # ページ設定
-st.set_page_config(page_title="英語ルビ振り【プリント作成モード】", layout="centered")
+st.set_page_config(page_title="英語ルビ振り【英文の表→ルビ付き英文の表】", layout="centered")
 
 # --- デザイン調整（翻訳ガード & UDデジタル教科書体） ---
 st.markdown("""
@@ -123,3 +123,4 @@ if 'table_content' in st.session_state:
         )
     elif password:
         st.error("パスワードが違います。")
+
