@@ -56,7 +56,7 @@ def text_to_ruby_html(input_text, custom_dict):
     return html_output
 
 # --- メイン UI ---
-st.markdown('<h1 class="notranslate" translate="no">📋 英語ルビ振り【英文の表→ルビ付き英文の表】", l】</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="notranslate" translate="no">📋 英語ルビ振り【英文の表→ルビ付き英文の表】</h1>', unsafe_allow_html=True)
 
 # ✨ 1. 入力エリアの強化（Excel/Wordコピペへの言及）
 text_input = st.text_area(
@@ -123,6 +123,7 @@ if 'table_content' in st.session_state:
         )
     elif password:
         st.error("パスワードが違います。")
+
 
 
 
