@@ -4,9 +4,9 @@ import jaconv
 import streamlit.components.v1 as components
 import re
 
-# ページ設定（タブ名とアイコンをプロ仕様に）
+# ページ設定（タブ名とアイコン）
 st.set_page_config(
-    page_title="英語ルビ振り｜プリント作成",
+    page_title="英語の表→ルビ付き英語の表",
     page_icon="📋",
     layout="centered"
 )
@@ -29,7 +29,9 @@ st.markdown("""
     }
     .stApp { background-color: #f9f4e6; color: #5d4037; }
     .stButton>button { background-color: #8d6e63; color: white; border-radius: 5px; font-weight: bold; width: 100%; }
-    h1 { font-family: "UD デジタル 教科書体 NK-B", sans-serif !important; color: #5d4037; text-align: center; margin-top: -50px; }
+    
+    /* 💡 外枠のタイトルと重ならないよう、アプリ内のタイトル位置を微調整 */
+    h3 { font-family: "UD デジタル 教科書体 NK-B", sans-serif !important; color: #5d4037; text-align: center; margin-top: -60px; margin-bottom: 20px; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -63,8 +65,8 @@ def text_to_ruby_html(input_text, custom_dict):
             html_output += f'<span class="notranslate" translate="no">{w} </span>'
     return html_output
 
-# --- メイン UI ---
-st.markdown('<h1 class="notranslate" translate="no">📋 英語ルビ振り【英語の表→ルビ付き英語の表】</h1>', unsafe_allow_html=True)
+# --- メイン UI（タイトルを控えめにして渋滞を解消） ---
+st.markdown('<h3 class="notranslate" translate="no">📋 プリント作成パネル</h3>', unsafe_allow_html=True)
 
 text_input = st.text_area(
     "▼ 英文を入力、またはExcel・Wordの表から貼り付けてください", 
@@ -99,7 +101,6 @@ if st.button("ルビ付き表を作成・更新する"):
         rt {{ font-size: {ruby_size}pt; color: #000; }}
     </style>
     """
-    # Word互換性を高めるxmlnsを追加
     html_header = f"""
     <html xmlns:o='urn:schemas-microsoft-com:office:office' 
           xmlns:w='urn:schemas-microsoft-com:office:word' 
@@ -136,4 +137,3 @@ if 'table_content' in st.session_state:
         )
     elif password:
         st.error("パスワードが違います。")
-
