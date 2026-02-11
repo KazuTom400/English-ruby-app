@@ -8,33 +8,36 @@ import re
 st.set_page_config(page_title="英語ルビ振り【表形式・詳細調整版】", layout="centered")
 
 # ---------------------------------------------------------
-# デザイン調整：UI全体をUDデジタル教科書体に
+# 【ガード1】ブラウザ全体への翻訳停止命令
 # ---------------------------------------------------------
 st.markdown("""
+    <script>
+        // 親ウィンドウ（Streamlit本体）のhtmlタグに翻訳拒否を設定
+        var html = window.parent.document.getElementsByTagName('html')[0];
+        html.setAttribute('lang', 'ja');
+        html.setAttribute('class', 'notranslate');
+        html.setAttribute('translate', 'no');
+    </script>
     <style>
+    /* 不要なメニューを非表示 */
     #MainMenu {visibility: hidden;}
     header {visibility: hidden;}
     footer {visibility: hidden;}
     .stDeployButton {display:none;}
     
-    /* アプリ全体のフォント設定 */
+    /* 全体のデザインとフォント */
     html, body, [class*="css"], .stMarkdown, .stSlider, .stButton, .stTextArea {
         font-family: "UD デジタル 教科書体 NK-R", "UD Digi Kyokashotai NK-R", "BIZ UDPGothic", sans-serif !important;
     }
-
     .stApp { background-color: #f9f4e6; color: #5d4037; }
     .stButton>button { background-color: #8d6e63; color: white; border-radius: 5px; width: 100%; }
-    
-    h1 {
-        font-family: "UD デジタル 教科書体 NK-B", "UD Digi Kyokashotai NK-B", sans-serif !important;
-        color: #5d4037;
-        text-align: center;
-        margin-top: -50px;
-    }
+    h1 { font-family: "UD デジタル 教科書体 NK-B", sans-serif !important; color: #5d4037; text-align: center; margin-top: -50px; }
     </style>
 """, unsafe_allow_html=True)
 
-# --- ロジック関数 (変更なし) ---
+# ---------------------------------------------------------
+# ロジック関数 (翻訳拒否属性を追加)
+# ---------------------------------------------------------
 def get_kana_smart(word, custom_dict):
     lower_word = word.lower()
     if lower_word in custom_dict: return custom_dict[lower_word]
@@ -53,14 +56,18 @@ def text_to_ruby_html(input_text, custom_dict):
     for w in tokens:
         clean_word = w.strip(strip_chars)
         kana = get_kana_smart(clean_word, custom_dict)
+        
+        # 【ガード2】英単語を含むスパンに translate="no" を付与
         if kana:
-            html_output += f'<ruby><rb>{w}</rb><rt>{jaconv.h2z(kana)}</rt></ruby><span> </span>'
+            z_kana = jaconv.h2z(kana)
+            html_output += f'<ruby class="notranslate" translate="no"><rb>{w}</rb><rt>{z_kana}</rt></ruby><span> </span>'
         else:
-            html_output += f"<span>{w} </span>"
+            html_output += f'<span class="notranslate" translate="no">{w} </span>'
+            
     return html_output
 
 # --- メイン UI ---
-st.markdown('<h1 class="notranslate">📋 英語ルビ振り【表形式・詳細調整版】</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="notranslate" translate="no">📋 英語ルビ振り【表形式・詳細調整版】</h1>', unsafe_allow_html=True)
 
 text_input = st.text_area("▼ 英文を1行ずつ入力してください", height=150, 
                          value="He can jump the highest in this school.\nThis bag is the newest of the five.")
@@ -77,28 +84,81 @@ with col2:
 custom_dict = {"i": "アイ", "my": "マイ", "'s": "ズ", "'t": "ト"}
 
 if st.button("ルビ付き表を作成・更新する"):
-    # ★ プレビューとWord用のフォント指定もUDデジタル教科書体に統一 ★
+    # 【ガード3】生成されるHTML全体のhtmlタグに翻訳拒否を設定
     style = f"""
     <style>
-        body {{ 
-            font-family: 'UD デジタル 教科書体 NK-R', 'UD Digi Kyokashotai NK-R', 'Century', serif; 
-        }}
+        body {{ font-family: 'UD デジタル 教科書体 NK-R', sans-serif; }}
         table {{ width: 100%; border-collapse: collapse; border: 2px solid black; }}
-        td {{ 
-            border: 2px solid black; 
-            padding: {cell_padding}px; 
-            font-size: {font_size}pt; 
-            line-height: {line_height}; 
-            background-color: white; 
-        }}
+        td {{ border: 2px solid black; padding: {cell_padding}px; font-size: {font_size}pt; line-height: {line_height}; background-color: white; }}
         ruby {{ ruby-align: center; }}
         rt {{ font-size: {ruby_size}pt; color: #000; }}
     </style>
     """
-    html_header = f"<html><head><meta charset='utf-8'>{style}</head><body><table border='1'>"
+    html_header = f'<html lang="ja" class="notranslate" translate="no"><head><meta charset="utf-8">{style}</head><body><table border="1">'
+    
     lines = text_input.strip().split('\n')
-    body_content = "".join([f"<tr><td>{text_to_ruby_html(l, custom_dict)}</td></tr>" for l in lines if l.strip()])
+    body_content = ""
+    for l in lines:
+        if l.strip():
+            ruby_line = text_to_ruby_html(l, custom_dict)
+            body_content += f"<tr><td>{ruby_line}</td></tr>"
+            
     st.session_state['table_content'] = html_header + body_content + "</table></body></html>"
 
-# --- 結果表示・保存セクション (以下省略) ---
-# (前回のパスワード・ダウンロード・フッター部分を続けてください)
+
+if 'table_content' in st.session_state:
+    st.markdown("---")
+    st.subheader("👀 プレビュー")
+    components.html(st.session_state['table_content'], height=400, scrolling=True)
+    
+    st.markdown("---")
+    st.markdown("### 📄 Word形式で保存・利用する")
+    
+    # Noteへの誘導
+    st.success(f"""
+    **🔑 パスワードと使い方の確認** Wordに表を貼り付ける方法や、必要なパスワードについては  
+    こちらの **[👉 Note解説記事（パスワード案内）](https://note.com/cool_toad2065/n/n2dd510cc185a)** をご確認ください。
+    """)
+    
+    password = st.text_input("利用パスワードを入力してください", type="password")
+    SECRET_PASS = st.secrets.get("PASSWORD", "test")
+
+    if password == SECRET_PASS:
+        st.success("認証に成功しました。")
+        st.download_button(
+            label="📄 表形式のWordファイルをダウンロード",
+            data=st.session_state['table_content'],
+            file_name="ruby_table_final.doc",
+            mime="application/msword"
+        )
+    elif password:
+        st.error("パスワードが正しくありません。Note記事内のパスワードをご確認ください。")
+
+
+st.markdown(f"""
+    <style>
+        .footer-links {{
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #d7ccc8;
+            font-size: 0.9rem;
+            font-family: sans-serif;
+        }}
+        /* 全てのリンクを強制的に「青色」にし、下線を引く */
+        .footer-links a {{
+            color: #0000ee !important; /* 標準的なリンクの青 */
+            text-decoration: underline !important;
+            margin: 0 10px;
+            font-weight: bold;
+        }}
+        .footer-links a:hover {{
+            color: #ff4500 !important; /* ホバー時はオレンジに */
+        }}
+    </style>
+    <div class="footer-links">
+        <a href="https://m-lab-apps.com/privacy.html" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a> | 
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX6jh-6_EPE6UTPnoWgKQtzpDgxNK5wOM1fGVxdvf2APLW9g/viewform?usp=header" target="_blank">お問い合わせ</a>
+        <p style="margin-top:10px; color: #a1887f; text-decoration: none;">© 2026 M-Lab Apps</p>
+    </div>
+""", unsafe_allow_html=True)
