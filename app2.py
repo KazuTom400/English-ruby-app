@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 import re
 
 # ページ設定
-st.set_page_config(page_title="英語ルビ振り【表形式・詳細調整版】", layout="centered")
+st.set_page_config(page_title="英語ルビ振り【表形式】", layout="centered")
 
 # ---------------------------------------------------------
 # 【ガード1】ブラウザ全体への翻訳停止命令
@@ -161,4 +161,5 @@ st.markdown(f"""
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX6jh-6_EPE6UTPnoWgKQtzpDgxNK5wOM1fGVxdvf2APLW9g/viewform?usp=header" target="_blank">お問い合わせ</a>
         <p style="margin-top:10px; color: #a1887f; text-decoration: none;">© 2026 M-Lab Apps</p>
     </div>
+
 """, unsafe_allow_html=True)
