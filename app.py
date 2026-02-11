@@ -1,69 +1,144 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-35R80B7L32"></script>
+import streamlit as st
+import alkana
+import jaconv
+import streamlit.components.v1 as components
+import re
+
+# ページ設定
+st.set_page_config(
+    page_title="英語ルビ振り文章作成ツール【通常モード】",
+    page_icon="📚",
+    layout="centered"
+)
+
+# ---------------------------------------------------------
+# Google翻訳による誤変換を防ぐための設定
+# ---------------------------------------------------------
+st.markdown("""
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-35R80B7L32');
+        var html = window.parent.document.getElementsByTagName('html')[0];
+        html.setAttribute('lang', 'ja');
+        html.setAttribute('class', 'notranslate');
+        html.setAttribute('translate', 'no');
     </script>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="canonical" href="https://m-lab-apps.com/">
-    <title>英語ルビ振り文章作成ツール | M-Lab Apps</title>
-
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1718411390072347" crossorigin="anonymous"></script>
-
     <style>
-        body, html { margin: 0; padding: 0; background-color: #f9f4e6; font-family: sans-serif; }
-        .nav-bar { background-color: #5d4037; color: white; text-align: center; padding: 12px 0; font-weight: bold; text-decoration: none; display: block; font-size: 14px; }
-        
-        /* アプリエリア：タイトルの下からすぐに開始 */
-        .app-container { width: 100%; height: 900px; border-bottom: 1px solid #d7ccc8; }
-        iframe { width: 100%; height: 100%; border: none; }
-        
-        /* リンク集セクション */
-        .info-section { background-color: #fff8e1; border-top: 1px solid #d7ccc8; padding: 30px 20px; text-align: center; color: #5d4037; }
-        .info-section h2 { font-size: 1.1rem; margin-bottom: 15px; }
-        .note-link-list { list-style: none; padding: 0; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .note-link-list li a { color: #8d6e63; text-decoration: none; font-size: 0.9rem; border-bottom: 1px solid #d7ccc8; padding-bottom: 2px; }
-
-        /* 🤖 忍者のように隠した極小SEOテキスト */
-        .seo-tiny-text { padding: 20px; text-align: center; color: #bcaaa4; font-size: 0.65rem; line-height: 1.4; }
-        
-        footer { text-align: center; font-size: 11px; padding: 20px 0; border-top: 1px solid #d7ccc8; background: #f9f4e6; }
-        footer a { color: #8d6e63; text-decoration: none; margin: 0 15px; }
+    #MainMenu {visibility: hidden;}
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+    .stDeployButton {display:none;}
+    
+    /* 全体の背景とフォント */
+    html, body, [class*="css"], .stMarkdown, .stSlider, .stButton, .stTextArea {
+        font-family: "UD デジタル 教科書体 NK-R", "UD Digi Kyokashotai NK-R", sans-serif !important;
+    }
+    .stApp { background-color: #f9f4e6; color: #5d4037; }
+    .stButton>button { background-color: #8d6e63; color: white; border-radius: 5px; font-weight: bold; width: 100%; }
+    h1 { font-family: "UD デジタル 教科書体 NK-B", sans-serif !important; color: #5d4037; text-align: center; font-size: 1.8rem !important; }
     </style>
-</head>
-<body>
+""", unsafe_allow_html=True)
 
-    <a href="table.html" class="nav-bar">📊 プリント用（表形式モード）はこちら</a>
+# セッション状態の初期化
+if 'html_content' not in st.session_state: st.session_state['html_content'] = ""
+if 'converted' not in st.session_state: st.session_state['converted'] = False
 
-    <div class="app-container">
-        <iframe src="https://english-ruby-app-5cbmsbsnyfjzf7fydhusza.streamlit.app/?embed=true"
-                allow="clipboard-read; clipboard-write; downloads;"
-                sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-downloads">
-        </iframe>
-    </div>
+# --- 賢いルビ振りロジック ---
+def get_kana_smart(word, custom_dict):
+    lower_word = word.lower()
+    if lower_word in custom_dict: return custom_dict[lower_word]
+    kana = alkana.get_kana(lower_word)
+    if kana: return kana
+    if lower_word.endswith("s") and len(lower_word) > 1:
+        singular = lower_word[:-1]
+        stem = custom_dict.get(singular) or alkana.get_kana(singular)
+        if stem: return stem + ("ツ" if singular.endswith("t") else "ス" if singular.endswith(("k", "p", "f")) else "ズ")
+    return None
 
-    <div class="info-section">
-        <h2>📖 開発ストーリー & 活用ガイド</h2>
-        <ul class="note-link-list">
-            <li><a href="https://note.com/cool_toad2065/n/nac7acc9a8979" target="_blank">なぜこのツールを作ったのか</a></li>
-            <li><a href="https://note.com/cool_toad2065/n/n733b7e656e0a" target="_blank">開発の舞台裏と苦労話</a></li>
-            <li><a href="https://note.com/cool_toad2065/n/n5ec12a666a7b" target="_blank">AIを使い倒すためのコツ</a></li>
-        </ul>
-    </div>
+# --- メイン UI ---
+st.markdown('<h1 class="notranslate" translate="no">📚 英語ルビ振り文章作成ツール</h1>', unsafe_allow_html=True)
 
-    <div class="seo-tiny-text">
-        <p>英語ルビ振り文章作成ツール。英文にカタカナのルビ（読み方）を自動で振る支援ツールです。読解補助や学習資料作成を効率化します。UDデジタル教科書体に対応し、読みやすさを追求しています。</p>
-    </div>
+# 1. 英文入力エリア
+text_input = st.text_area("▼ ここに英文を入力してください", height=150, 
+                         value="She's my best friend. Tom's cat is cute. I can't swim.")
 
-    <footer>
-        © 2026 M-Lab Apps | <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX6jh-6_EPE6UTPnoWgKQtzpDgxNK5wOM1fGVxdvf2APLW9g/viewform?usp=header">お問合せフォーム</a> | <a href="privacy.html">プライバシーポリシー</a>
-    </footer>
+# ✨ 新機能：スライダー調整セクション（ここが抜けていました！）
+st.subheader("📏 レイアウト微調整")
+col1, col2 = st.columns(2)
+with col1:
+    font_size = st.slider("本文の大きさ (pt)", 10, 40, 18)
+    ruby_size = st.slider("ルビの大きさ (pt)", 5, 20, 9)
+with col2:
+    line_height = st.slider("行の間隔（高さ）", 1.0, 4.0, 2.5, 0.1)
 
-</body>
-</html>
+# 2. 作成ボタン
+if st.button("ルビ付きテキストを作成する"):
+    if text_input:
+        tokens = re.findall(r"[\w]+|['][\w]+|[.,!?;:\"()\-]", text_input)
+        
+        # ✨ スライダーの変数を反映させたスタイル設定
+        style = f"""
+            <style>
+                body {{
+                    font-family: 'UD デジタル 教科書体 NK-R', 'UD Digi Kyokashotai NK-R', serif;
+                    font-size: {font_size}pt;
+                    color: #000000;
+                    line-height: {line_height};
+                }}
+                ruby {{ ruby-align: center; }}
+                rt {{
+                    color: #000000;
+                    font-family: 'UD デジタル 教科書体 NK-R', sans-serif;
+                    font-size: {ruby_size}pt;
+                }}
+            </style>
+        """
+        
+        html = f"""
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' 
+              xmlns:w='urn:schemas-microsoft-com:office:word' 
+              lang="ja" class="notranslate" translate="no">
+        <head><meta charset='utf-8'>{style}</head>
+        <body><div class=WordSection1><p class=MsoNormal>
+        """
+        
+        custom_dict = {"i": "アイ", "my": "マイ", "'s": "ズ", "'t": "ト", "'m": "ム", "'re": "アー", "'ve": "ブ", "'ll": "ル", "'d": "ド"}
+
+        # 処理ロジック（改行対応版）
+        lines = text_input.split('\n')
+        for line in lines:
+            words = re.findall(r"[\w]+|['][\w]+|[.,!?;:\"()\-]", line)
+            for word in words:
+                if re.match(r"[^a-zA-Z']", word): 
+                    html += f"<span>{word} </span>" 
+                    continue
+                clean_word = word.strip(".,!?\"")
+                kana = get_kana_smart(clean_word, custom_dict)
+                if kana:
+                    z_kana = jaconv.h2z(kana)
+                    html += f'<ruby class="notranslate" translate="no"><rb>{clean_word}</rb><rt>{z_kana}</rt></ruby><span> </span>'
+                else:
+                    html += f"<span>{clean_word} </span>"
+            html += "<br>" 
+
+        html += "</p></div></body></html>"
+        st.session_state['html_content'] = html
+        st.session_state['converted'] = True
+
+# 3. 結果表示
+if st.session_state['converted']:
+    st.markdown("---")
+    st.subheader("👀 プレビュー（調整が反映されます）")
+    components.html(st.session_state['html_content'], height=400, scrolling=True)
+    
+    st.markdown("---")
+    st.subheader("💾 Word形式で保存")
+    password = st.text_input("パスワードを入力してEnter", type="password")
+    
+    # Secretsから取得、なければデフォルト"test"
+    if password == st.secrets.get("PASSWORD", "test"):
+        st.success("認証成功")
+        st.download_button(
+            label="📄 Wordファイルをダウンロード",
+            data=st.session_state['html_content'],
+            file_name="ruby_print.doc",
+            mime="application/msword"
+        )
