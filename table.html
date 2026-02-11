@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>表形式モード | M-Lab Apps</title>
+    <meta name="description" content="【プリント作成専用】英語ルビ振りの表形式作成ツール。英文を1行ずつ入力するだけで、枠線付きの綺麗なルビ付きプリントを自動生成します。">
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-35R80B7L32"></script>
     <script>
@@ -13,26 +13,75 @@
       gtag('config', 'G-35R80B7L32');
     </script>
 
+    <title>表形式モード | M-Lab Apps</title>
+    
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #f9f4e6; }
-        iframe { width: 100%; height: 100%; border: none; }
-        footer {
-            position: fixed; bottom: 0; width: 100%;
-            background: rgba(249, 244, 230, 0.9);
-            text-align: center; font-size: 12px; padding: 10px 0;
-            border-top: 1px solid #d7ccc8; z-index: 1000;
+        /* 全体設定 */
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            background-color: #f9f4e6; 
         }
-        footer a { color: #8d6e63; text-decoration: none; margin: 0 10px; font-weight: bold; }
+
+        /* ✨ 強化された「戻る」ボタン（バー） */
+        .back-to-normal-bar {
+            background-color: #5d4037; /* より濃いブラウンで「戻る」を強調 */
+            color: white;
+            text-align: center;
+            padding: 12px 0;
+            font-family: "UD デジタル 教科書体 NK-R", sans-serif;
+            font-weight: bold;
+            text-decoration: none;
+            display: block;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* 影をつけて立体的に */
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+        .back-to-normal-bar:hover {
+            background-color: #3e2723;
+            letter-spacing: 1px; /* ホバー時に少し広がる演出 */
+        }
+
+        /* アプリ表示エリア */
+        .app-container { 
+            flex-grow: 1; 
+            position: relative; 
+        }
+        iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+        }
+
+        /* フッター */
+        footer {
+            background: rgba(249, 244, 230, 0.9);
+            text-align: center; 
+            font-size: 11px; 
+            padding: 6px 0;
+            border-top: 1px solid #d7ccc8; 
+        }
+        footer a { color: #8d6e63; text-decoration: none; margin: 0 10px; }
     </style>
 </head>
 <body>
-    <iframe src="https://english-ruby-app-appgr9gzfsoxqjw9ngdeeqb.streamlit.app/?embed=true"></iframe>
+
+    <a href="index.html" class="back-to-normal-bar">
+        🏠 英語ルビ振り【通常モード（長文用）】に戻る
+    </a>
+
+    <div class="app-container">
+        <iframe src="https://english-ruby-app-appgr9gzfsoxqjw9ngdeeqb.streamlit.app/?embed=true"></iframe>
+    </div>
 
     <footer>
         © 2026 M-Lab Apps | 
-        <a href="index.html">🏠 通常モードに戻る</a> | 
         <a href="privacy.html">プライバシーポリシー</a> | 
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX6jh-6_EPE6UTPnoWgKQtzpDgxNK5wOM1fGVxdvf2APLW9g/viewform?usp=header">お問い合わせ</a>
     </footer>
+
 </body>
 </html>
