@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="canonical" href="https://m-lab-apps.com/table.html">
-
     <meta property="og:title" content="英語の表→ルビ付き英語の表 | M-Lab Apps">
     <meta property="og:description" content="Excelの表をコピペするだけでルビ付き英語プリントが完成。UDデジタル教科書体対応。">
+    
     <title>英語の表→ルビ付き英語の表 | M-Lab Apps</title>
     
     <style>
         body, html { margin: 0; padding: 0; height: 100%; display: flex; flex-direction: column; background-color: #f9f4e6; font-family: sans-serif; }
         
-        /* 🏠 戻るバー：デザインをアプリの茶色に統一 */
-        .back-to-normal-bar { 
+        /* 最上部の戻るボタン */
+        .back-bar { 
             background-color: #5d4037; 
             color: white; 
             text-align: center; 
@@ -21,41 +21,43 @@
             font-weight: bold; 
             text-decoration: none; 
             display: block; 
+            font-size: 14px;
         }
 
-        /* 🤖 検索エンジン対策セクション（ここがソフト404を防ぎます） */
+        /* 画面中央のタイトルセクション */
         .header-section { 
-            padding: 20px; 
+            padding: 25px 20px; 
             text-align: center; 
             color: #5d4037; 
             background: #fff8e1; 
             border-bottom: 1px solid #d7ccc8;
         }
-        .header-section h1 { font-size: 1.4rem; margin: 0; color: #5d4037; }
-        .header-section p { font-size: 0.85rem; margin: 8px 0 0 0; opacity: 0.8; }
+        .header-section h1 { font-size: 1.6rem; margin: 0; color: #5d4037; }
+        .header-section p { font-size: 0.9rem; margin: 10px 0 0 0; opacity: 0.8; }
 
+        /* アプリを表示するコンテナ */
         .app-container { flex-grow: 1; position: relative; overflow: hidden; }
         iframe { width: 100%; height: 100%; border: none; }
         
-        footer { background: rgba(249, 244, 230, 0.9); text-align: center; font-size: 11px; padding: 8px 0; border-top: 1px solid #d7ccc8; }
+        footer { background: #f9f4e6; text-align: center; font-size: 11px; padding: 10px 0; border-top: 1px solid #d7ccc8; }
         footer a { color: #8d6e63; text-decoration: none; margin: 0 10px; }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back-to-normal-bar">🏠 英語ルビ振り【通常モード】に戻る</a>
+    <a href="index.html" class="back-bar">🏠 英語ルビ振り【通常モード】に戻る</a>
 
     <div class="header-section">
         <h1>英語の表→ルビ付き英語の表</h1>
-        <p>ExcelやWordから貼り付けるだけで、1行1マスの美しいルビ付き表を自動生成します</p>
+        <p>ExcelやWordから貼り付けるだけで、1行1マスの美しいルビ付き表を自動生成します。</p>
     </div>
 
     <div class="app-container">
-        <iframe src="https://あなたのアプリ名.streamlit.app/?embed=true"></iframe>
+        <iframe src="https://あなたのアプリのURL.streamlit.app/?embed=true"></iframe>
     </div>
 
     <footer>
-        © 2026 M-Lab Apps | <a href="NoteのURL">開発ストーリー</a> | <a href="privacy.html">プライバシーポリシー</a>
+        © 2026 M-Lab Apps | <a href="Noteの記事URL">開発ストーリー</a> | <a href="privacy.html">プライバシーポリシー</a>
     </footer>
 
 </body>
