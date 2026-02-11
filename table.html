@@ -2,104 +2,67 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <link rel="canonical" href="https://m-lab-apps.com/table.html">
-    <meta property="og:title" content="プリント作成モード | 英語ルビ振り M-Lab Apps">
-<meta property="og:description" content="英単語や文章を1行1マスの表形式でルビ振りに。Word保存・サイズ調整対応で、英語の小テストやワークシート作成が驚くほど楽になります。">
-<meta property="og:image" content="https://m-lab-apps.com/table English.png">
-<meta property="og:url" content="https://m-lab-apps.com/table.html">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="M-Lab Apps">
-<meta name="twitter:card" content="summary_large_image">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="【プリント作成専用】英語ルビ振りの表形式作成ツール。英文を1行ずつ入力するだけで、枠線付きの綺麗なルビ付きプリントを自動生成します。">
-    
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-35R80B7L32"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-35R80B7L32');
-    </script>
+    <link rel="canonical" href="https://m-lab-apps.com/table.html">
 
-    <title>表形式モード | M-Lab Apps</title>
+    <meta property="og:title" content="プリント作成モード | 英語ルビ振り M-Lab Apps">
+    <meta property="og:description" content="英単語や文章を1行1マスの表形式でルビ振りに。Word保存・サイズ調整対応で、英語の小テストやワークシート作成が驚くほど楽になります。">
+    <meta property="og:image" content="https://m-lab-apps.com/ogp-image.png">
+    <meta property="og:url" content="https://m-lab-apps.com/table.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="M-Lab Apps">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <title>プリント作成モード | M-Lab Apps</title>
     
     <style>
-        /* 全体設定 */
-        body, html { 
-            margin: 0; 
-            padding: 0; 
-            height: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            background-color: #f9f4e6; 
-        }
-
-        /* ✨ 強化された「戻る」ボタン（バー） */
-        .back-to-normal-bar {
-            background-color: #5d4037; /* より濃いブラウンで「戻る」を強調 */
-            color: white;
-            text-align: center;
-            padding: 12px 0;
-            font-family: "UD デジタル 教科書体 NK-R", sans-serif;
-            font-weight: bold;
-            text-decoration: none;
-            display: block;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* 影をつけて立体的に */
-            transition: all 0.3s ease;
-            z-index: 1001;
-        }
-        .back-to-normal-bar:hover {
-            background-color: #3e2723;
-            letter-spacing: 1px; /* ホバー時に少し広がる演出 */
-        }
-
-        /* アプリ表示エリア */
-        .app-container { 
-            flex-grow: 1; 
-            position: relative; 
-        }
-        iframe { 
-            width: 100%; 
-            height: 100%; 
-            border: none; 
-        }
-
-        /* フッター */
-        footer {
-            background: rgba(249, 244, 230, 0.9);
+        body, html { margin: 0; padding: 0; height: 100%; display: flex; flex-direction: column; background-color: #f9f4e6; font-family: sans-serif; }
+        
+        /* 🏠 戻るバー：1つに統一 */
+        .back-to-normal-bar { 
+            background-color: #5d4037; 
+            color: white; 
             text-align: center; 
-            font-size: 11px; 
-            padding: 6px 0;
-            border-top: 1px solid #d7ccc8; 
+            padding: 12px 0; 
+            font-weight: bold; 
+            text-decoration: none; 
+            display: block; 
         }
+
+        /* 🤖 検索エンジン用の説明文（目立たず配置） */
+        .seo-text { 
+            padding: 20px; 
+            text-align: center; 
+            color: #5d4037; 
+            background: #fff8e1; 
+            border-bottom: 1px solid #d7ccc8;
+        }
+        .seo-text h1 { font-size: 1.4rem; margin: 0 0 10px 0; }
+        .seo-text p { font-size: 0.9rem; margin: 5px 0; }
+
+        .app-container { flex-grow: 1; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
+        
+        footer { background: rgba(249, 244, 230, 0.9); text-align: center; font-size: 11px; padding: 6px 0; border-top: 1px solid #d7ccc8; }
         footer a { color: #8d6e63; text-decoration: none; margin: 0 10px; }
     </style>
 </head>
 <body>
+
     <a href="index.html" class="back-to-normal-bar">🏠 英語ルビ振り【通常モード】に戻る</a>
 
-    <div style="padding: 20px; max-width: 800px; margin: 0 auto; color: #5d4037;">
+    <div class="seo-text">
         <h1>プリント作成モード（表形式）</h1>
         <p>ExcelやWordから英文を貼り付けるだけで、1行1マスの美しいルビ付き表を自動生成します。</p>
-        <p>UDデジタル教科書体に対応し、小テストやワークシート作成を圧倒的に効率化するツールです。</p>
+        <p>UDデジタル教科書体に対応し、小テストやワークシート作成を圧倒的に効率化します。</p>
     </div>
 
     <div class="app-container">
         <iframe src="https://あなたのアプリ名.streamlit.app/?embed=true"></iframe>
     </div>
 
-    <a href="index.html" class="back-to-normal-bar">
-        🏠 英語ルビ振り【通常モード（長文用）】に戻る
-    </a>
-
-    <div class="app-container">
-        <iframe src="https://english-ruby-app-appgr9gzfsoxqjw9ngdeeqb.streamlit.app/?embed=true"></iframe>
-    </div>
-
     <footer>
-        © 2026 M-Lab Apps | 
-        <a href="privacy.html">プライバシーポリシー</a> | 
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX6jh-6_EPE6UTPnoWgKQtzpDgxNK5wOM1fGVxdvf2APLW9g/viewform?usp=header">お問い合わせ</a>
+        © 2026 M-Lab Apps | <a href="Noteの記事URL">開発ストーリー</a> | <a href="privacy.html">プライバシーポリシー</a>
     </footer>
 
 </body>
