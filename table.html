@@ -17,67 +17,62 @@
     <meta property="og:description" content="ExcelやWordから英文を貼り付けるだけで、ルビ付きの美しい表を自動生成。英語教材作成を効率化します。">
     <meta property="og:url" content="https://m-lab-apps.com/table.html">
     <meta property="og:type" content="article">
-    <meta property="og:image" content="https://m-lab-apps.com/table English.png">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="https://m-lab-apps.com/table%20English.png"> <meta name="twitter:card" content="summary_large_image">
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1718411390072347" crossorigin="anonymous"></script>
 
     <style>
         body, html { margin: 0; padding: 0; background-color: #f9f4e6; font-family: sans-serif; }
-        .back-bar { background-color: #5d4037; color: white; text-align: center; padding: 12px 0; font-weight: bold; text-decoration: none; display: block; font-size: 14px; }
+        /* クラス名を back-bar に統一 */
+        .back-bar { background-color: #5d4037; color: white !important; text-align: center; padding: 12px 0; font-weight: bold; text-decoration: none; display: block; font-size: 14px; }
         
-        /* アプリエリア：余計な余白を削り、ナビバーのすぐ下から開始 */
-        .app-container { width: 100%; height: 900px; border-bottom: 1px solid #d7ccc8; }
+        /* アプリエリア：高さを固定し、アプリのみを表示 */
+        .app-container { width: 100%; height: 900px; border-bottom: 1px solid #d7ccc8; background-color: #ffffff; }
         iframe { width: 100%; height: 100%; border: none; }
         
-        /* リンク集セクション */
-        .info-section { background-color: #fff8e1; border-top: 1px solid #d7ccc8; padding: 30px 20px; text-align: center; color: #5d4037; }
-        .info-section h2 { font-size: 1.1rem; margin-bottom: 15px; }
+        /* 地下配置の説明セクション */
+        .docs-section { background-color: #ffffff; padding: 60px 20px; border-bottom: 1px solid #d7ccc8; }
+        .docs-inner { max-width: 850px; margin: 0 auto; color: #5d4037; line-height: 1.8; text-align: left; }
+        .docs-inner h2 { font-size: 1.4rem; border-left: 5px solid #5d4037; padding-left: 15px; margin-bottom: 25px; }
+        .docs-inner h3 { font-size: 1.1rem; margin-top: 30px; }
+        
+        .info-section { background-color: #fff8e1; padding: 30px 20px; text-align: center; color: #5d4037; }
         .note-link-list { list-style: none; padding: 0; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
         .note-link-list li a { color: #8d6e63; text-decoration: none; font-size: 0.9rem; border-bottom: 1px solid #d7ccc8; padding-bottom: 2px; }
 
-        /* 🤖 存在感を消した極小SEOテキスト */
         .seo-tiny-text { padding: 20px; text-align: center; color: #bcaaa4; font-size: 0.65rem; line-height: 1.4; }
         
         footer { text-align: center; font-size: 11px; padding: 20px 0; border-top: 1px solid #d7ccc8; background: #f9f4e6; }
         footer a { color: #8d6e63; text-decoration: none; margin: 0 15px; }
     </style>
 </head>
-<body>  
-    <a href="index.html" class="nav-bar">英語ルビ振り【通常モード】はこちら</a>
-   <div class="app-container">
-       <section class="docs-section" style="background-color: #ffffff; border-top: 1px solid #d7ccc8; padding: 60px 20px;">
-    <div style="max-width: 850px; margin: 0 auto; color: #5d4037; line-height: 1.8; text-align: left;">
-        
-        <h2 style="font-size: 1.4rem; border-left: 5px solid #5d4037; padding-left: 15px; margin-bottom: 25px;">
-            M-Lab Apps：AIと数理モデルによる学習支援の最適化
-        </h2>
+<body>
 
-        <p>「M-Lab Apps」は、<strong>『感覚的なものを、数値やデータで確実な成果に変える』</strong>という設計思想に基づき開発された、英語学習・指導のためのDXツールです。本ページでは、ツールの背景にある技術的アプローチと、教育現場での活用方法について詳述します。</p>
+    <a href="index.html" class="back-bar">🏠 英語ルビ振り【通常モード】はこちら</a>
 
-        <h3 style="font-size: 1.1rem; margin-top: 30px;">1. 英語リーディングにおける認知的負荷の低減</h3>
-        <p>英語初学者にとって、未知の語彙に対する「読み（発音）」の不安は、読解速度を著しく低下させる要因となります。本ツールは、形態素解析アルゴリズムを用いて英文を解析し、最適なルビ（ふりがな）を自動付与することで、学習者が文脈の理解に集中できる環境を提供します。</p>
-
-        <h3 style="font-size: 1.1rem; margin-top: 30px;">2. UDデジタル教科書体と視認性の科学</h3>
-        <p>教材作成において重要なのは、単なる情報の付与ではなく「読みやすさ」の質です。本ツールは、視認性に優れた「UDデジタル教科書体」との親和性を考慮し、文字間隔やルビの配置を数学的に調整しています。これにより、ディスレクシア（読字障害）傾向のある学習者や、視覚情報の処理に課題を持つ生徒に対しても、優しい教材提供が可能になります。</p>
-
-        <h3 style="font-size: 1.1rem; margin-top: 30px;">3. 教育現場での実用的な活用ガイド</h3>
-        <ul style="margin-bottom: 20px;">
-            <li><strong>クイック小テスト：</strong> 教科書の本文を貼り付けるだけで、発音確認用のワークシートが完成します。</li>
-            <li><strong>多読トレーニング：</strong> 難易度の高い洋書やニュース記事にルビを振ることで、辞書を引く回数を減らし、多読の効率を最大化します。</li>
-            <li><strong>授業準備のDX：</strong> 従来、手作業で数時間かかっていたルビ振り作業を数秒に短縮し、教員が「生徒と向き合う時間」を創出します。</li>
-        </ul>
-
-        <p style="background-color: #f9f4e6; padding: 20px; border-radius: 8px; font-size: 0.9rem;">
-            開発者メッセージ：応用数学の研究知見を活かし、複雑なデータ処理をシンプルなUIに統合しました。このツールが、英語を学ぶすべての人にとって、確実な成果に繋がる「架け橋」となることを願っています。
-        </p>
-    </div>
-</section>
+    <div class="app-container">
         <iframe src="https://english-ruby-app-appgr9gzfsoxqjw9ngdeeqb.streamlit.app/?embed=true"
                 allow="clipboard-read; clipboard-write; downloads;"
                 sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-downloads">
         </iframe>
     </div>
+
+    <section class="docs-section">
+        <div class="docs-inner">
+            <h2>M-Lab Apps：AIと数理モデルによる学習支援の最適化</h2>
+            <p>「M-Lab Apps」は、<strong>『感覚的なものを、数値やデータで確実な成果に変える』</strong>という設計思想に基づき開発された、英語学習・指導のためのDXツールです。</p>
+
+            <h3>1. 英語リーディングにおける認知的負荷の低減</h3>
+            <p>英語初学者にとって、未知の語彙に対する「読み（発音）」の不安は、読解速度を低下させる要因となります。本ツールは、形態素解析アルゴリズムを用いて英文を解析し、最適なルビ（ふりがな）を自動付与することで、学習者が文脈の理解に集中できる環境を提供します。</p>
+
+            <h3>2. 表形式モードによるプリント作成のDX</h3>
+            <p>従来の教材作成では、英単語の上に手作業でルビを振る作業に多大な時間を要していました。本ツール（表形式モード）は、ExcelやWordからコピーした文章を1行1マスの美しい表に変換。UDデジタル教科書体での出力を想定した配置により、視覚的な認知負荷を数学的に最適化した教材を瞬時に作成できます。</p>
+
+            <p style="background-color: #f9f4e6; padding: 20px; border-radius: 8px; font-size: 0.9rem; margin-top: 30px;">
+                開発者メッセージ：応用数学の研究知見を活かし、複雑なデータ処理をシンプルなUIに統合しました。このツールが、英語を学ぶすべての人にとって、確実な成果に繋がる「架け橋」となることを願っています。
+            </p>
+        </div>
+    </section>
 
     <div class="info-section">
         <h2>📖 開発ストーリー & 活用ガイド</h2>
@@ -89,7 +84,7 @@
     </div>
 
     <div class="seo-tiny-text">
-        <p>英語の表→ルビ付き英語の表：プリント作成支援ツール。ExcelやWordから英文を貼り付けるだけで、1行1マスの美しいルビ付き表を自動生成します。UDデジタル教科書体に対応し、英語の小テストやワークシート作成を効率化します。</p>
+        <p>英語の表→ルビ付き英語の表：プリント作成支援ツール。ExcelやWordから英文を貼り付けるだけで、1行1マスの美しいルビ付き表を自動生成します。英語の小テストやワークシート作成を効率化します。</p>
     </div>
 
     <footer>
