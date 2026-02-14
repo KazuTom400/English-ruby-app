@@ -39,10 +39,35 @@
         .seo-tiny-text { padding: 20px; text-align: center; color: #bcaaa4; font-size: 0.65rem; line-height: 1.4; }
         footer { text-align: center; font-size: 11px; padding: 20px 0; border-top: 1px solid #d7ccc8; background: #f9f4e6; }
         footer a { color: #8d6e63; text-decoration: none; margin: 0 15px; }
+        /* --- 追加：ナビゲーションバーのスタイル --- */
+        .navbar { background-color: #5d4037; padding: 10px 0; sticky: top; z-index: 1000; }
+        .nav-inner { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .nav-logo { color: white; text-decoration: none; font-weight: bold; font-size: 1.2rem; }
+        .nav-links { display: flex; gap: 15px; }
+        .nav-links a { color: #d7ccc8; text-decoration: none; font-size: 0.85rem; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: white; font-weight: bold; }
+        
+        @media (max-width: 600px) {
+            .nav-inner { flex-direction: column; gap: 10px; }
+            .nav-links { flex-wrap: wrap; justify-content: center; }
+        }
     </style>
 </head>
 <body>
-    <a href="table.html" class="back-bar">📊 プリント用（表形式モード）はこちら</a>
+   <body>
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">M-Lab Apps</a>
+            <div class="nav-links">
+                <a href="index.html" class="active">通常モード</a>
+                <a href="table.html">表形式モード</a>
+                <a href="about.html">開発ストーリー</a>
+                <a href="features.html">機能紹介</a>
+                <a href="ai-guide.html">AI活用術</a>
+                <a href="terms.html">利用規約</a>
+            </div>
+        </div>
+    </nav>
     <div class="app-container">
         <iframe src="https://english-ruby-app-5cbmsbsnyfjzf7fydhusza.streamlit.app/?embed=true"
                 allow="clipboard-read; clipboard-write; downloads;"
