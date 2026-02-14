@@ -12,79 +12,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="canonical" href="https://m-lab-apps.com/table.html">
+    
     <title>英語の表→ルビ付き英語の表 | M-Lab Apps</title>
+    <meta name="description" content="ExcelやWordから英文を貼り付けるだけで、ルビ付きの美しい表を自動生成。教育現場のプリント作成を劇的に効率化します。">
     <meta property="og:title" content="英語の表→ルビ付き英語の表 | M-Lab Apps">
     <meta property="og:description" content="ExcelやWordから英文を貼り付けるだけで、ルビ付きの美しい表を自動生成。英語教材作成を効率化します。">
     <meta property="og:url" content="https://m-lab-apps.com/table.html">
     <meta property="og:type" content="article">
-    <meta property="og:image" content="https://m-lab-apps.com/table%20English.png"> <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="https://m-lab-apps.com/table%20English.png"> 
+    <meta name="twitter:card" content="summary_large_image">
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1718411390072347" crossorigin="anonymous"></script>
 
     <style>
-        body, html { margin: 0; padding: 0; background-color: #f9f4e6; font-family: sans-serif; }
-        /* クラス名を back-bar に統一 */
-        .back-bar { background-color: #5d4037; color: white !important; text-align: center; padding: 12px 0; font-weight: bold; text-decoration: none; display: block; font-size: 14px; }
-        
-        /* アプリエリア：高さを固定し、アプリのみを表示 */
-        .app-container { width: 100%; height: 900px; border-bottom: 1px solid #d7ccc8; background-color: #ffffff; }
-        iframe { width: 100%; height: 100%; border: none; }
-        
-        /* 地下配置の説明セクション */
+        body, html { margin: 0; padding: 0; background-color: #f9f4e6; font-family: sans-serif; overflow-x: hidden; }
+        .app-container { width: 100%; height: 900px; border-bottom: 1px solid #d7ccc8; background-color: #ffffff; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; display: block; }
         .docs-section { background-color: #ffffff; padding: 60px 20px; border-bottom: 1px solid #d7ccc8; }
         .docs-inner { max-width: 850px; margin: 0 auto; color: #5d4037; line-height: 1.8; text-align: left; }
         .docs-inner h2 { font-size: 1.4rem; border-left: 5px solid #5d4037; padding-left: 15px; margin-bottom: 25px; }
         .docs-inner h3 { font-size: 1.1rem; margin-top: 30px; }
-        
         .info-section { background-color: #fff8e1; padding: 30px 20px; text-align: center; color: #5d4037; }
         .note-link-list { list-style: none; padding: 0; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
         .note-link-list li a { color: #8d6e63; text-decoration: none; font-size: 0.9rem; border-bottom: 1px solid #d7ccc8; padding-bottom: 2px; }
-
-        .seo-tiny-text { padding: 20px; text-align: center; color: #bcaaa4; font-size: 0.65rem; line-height: 1.4; }
         
-        footer { text-align: center; font-size: 11px; padding: 20px 0; border-top: 1px solid #d7ccc8; background: #f9f4e6; }
-        footer a { color: #8d6e63; text-decoration: none; margin: 0 15px; }
+        /* ナビゲーションバーのスタイル */
+        .navbar { background-color: #5d4037; padding: 10px 0; position: sticky; top: 0; z-index: 1000; }
+        .nav-inner { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .nav-logo { color: white; text-decoration: none; font-weight: bold; font-size: 1.2rem; }
+        .nav-links { display: flex; gap: 15px; }
+        .nav-links a { color: #d7ccc8; text-decoration: none; font-size: 0.85rem; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: white; font-weight: bold; }
+        
+        footer { text-align: center; font-size: 11px; padding: 30px 0; border-top: 1px solid #d7ccc8; background: #f9f4e6; }
+        footer a { color: #8d6e63; text-decoration: none; margin: 0 10px; }
+
+        @media (max-width: 600px) {
+            .nav-inner { flex-direction: column; gap: 10px; }
+            .nav-links { flex-wrap: wrap; justify-content: center; }
+        }
     </style>
 </head>
 <body>
-
-    <a href="index.html" class="back-bar">🏠 英語ルビ振り【通常モード】はこちら</a>
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">M-Lab Apps</a>
+            <div class="nav-links">
+                <a href="index.html">通常モード</a>
+                <a href="table.html" class="active">表形式モード</a>
+                <a href="about.html">開発ストーリー</a>
+                <a href="features.html">機能紹介</a>
+                <a href="ai-guide.html">AI活用術</a>
+                <a href="terms.html">利用規約</a>
+            </div>
+        </div>
+    </nav>
 
     <div class="app-container">
-        <iframe src="https://english-ruby-app-appgr9gzfsoxqjw9ngdeeqb.streamlit.app/?embed=true"
+        <iframe src="https://english-ruby-table-app-n9s9stnt3sq6j493yqrmh5.streamlit.app/?embed=true"
                 allow="clipboard-read; clipboard-write; downloads;"
                 sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-downloads">
         </iframe>
     </div>
 
     <section class="docs-section">
-       <div class="docs-inner">
+        <div class="docs-inner">
             <h2>教育DXの核心：表形式構造化による教材作成の革新</h2>
-            <p>「表形式モード」は、現場の教師が実際に使用していた「表形式の音読プリント」を、デジタルで即座に再現するために追加された専用ユニットです。Excel等のデータを、そのまま「印刷可能な学習資材」へと構造化します。</p>
+            <p>「表形式モード」は、現場の教師が実際に使用していた「音読プリント」の形式を再現するために追加された専用ユニットです。ExcelやWordから英文を貼り付けるだけで、1行1マスの美しいルビ付き表を自動生成します。</p>
 
-            <div style="background-color: #eef2f7; padding: 25px; border-radius: 10px; border-left: 6px solid #8d6e63; margin-top: 30px;">
-                <h3>【仕組みの解説】Word完全互換の秘密</h3>
+            <div style="background-color: #f0f4f8; padding: 25px; border-radius: 10px; border-left: 6px solid #5d4037; margin: 30px 0;">
+                <h3>【技術解説】Word完全互換を支えるXML名前空間の制御</h3>
                 <p><code>app2.py</code> の出力エンジンは、Microsoft Wordが文書構造を正確に解釈できるよう設計されています。</p>
                 <ul>
-                    <li><strong>Office XML名前空間の制御</strong>：HTMLヘッダーに <code>xmlns:o</code> や <code>xmlns:w</code> を明示的に指定。Web上の表をWordに貼った際のレイアウト崩れやルビのズレを論理的に防止しました。</li>
-                    <li><strong>データの構造化パース</strong>：改行コード（\n）をトリガーとしてテキストを配列化。各セル内で正規表現を用いて記号を切り分け、英文のみをルビ付与プロセスへ渡す例外処理を徹底しています。</li>
+                    <li><strong>Office XML名前空間の指定</strong>：HTMLヘッダーに <code>xmlns:o</code> や <code>xmlns:w</code> を明示的に指定。これにより、Web上の表をWordに貼り付けた際のレイアウト崩れを論理的に防止しました。</li>
+                    <li><strong>データの構造化パース</strong>：改行コード（\n）をトリガーとしてテキストを配列化し、各セル内で正規表現を用いて記号を切り分け、英文のみを抽出してルビ付与プロセスへ渡す処理を徹底しています。</li>
                 </ul>
             </div>
 
-            <h3>1. プリント作成の「ゼロ・レイアウト」構想</h3>
-            <p>従来の教材作成では、表の中にルビを振る際、セルの高さが不揃いになる問題がありました。本ツールは、セルの余白（Padding）を数値制御することで、「貼り付けた瞬間に印刷できる」状態を提供。レイアウト調整という無駄な時間をゼロにします。</p>
+            <h3>1. プリント作成コストの劇的削減</h3>
+            <p>従来の教材作成において、表の各マスに一つずつルビを振る作業は、1枚のプリントで数時間を要するものでした。本ツールは、セルの余白や行間を数値制御することで、「貼り付けた瞬間に印刷できる」状態を提供。教員が「事務作業」から解放され、生徒と向き合う創造的な活動に専念できる環境を構築します。</p>
 
-            <h3>2. 応用数学の視点から見た「情報の整理」</h3>
-            <p>私は大学で機械工学を専攻し、流体や熱の研究を行っています。複雑な文字列を配列として整理し、適切なタグを割り振るプロセスは、シミュレーション結果を可視化する手法と共通しています。この「整然とした美しさ」が、生徒の集中力維持に寄与します。</p>
+            <h3>2. 応用工学の視点から見た「情報の整理」</h3>
+            <p>私は普段、機械工学の分野で流体や熱の研究を行っています。複雑な文字列を配列として整理し、適切なタグを割り振るプロセスは、シミュレーション結果を可視化する手法と共通しています。この「整然とした美しさ」が、学習者の集中力維持に寄与します。</p>
         </div>
+    </section>
 
-    <div class="seo-tiny-text">
-        <p>英語の表→ルビ付き英語の表：プリント作成支援ツール。ExcelやWordから英文を貼り付けるだけで、1行1マスの美しいルビ付き表を自動生成します。英語の小テストやワークシート作成を効率化します。</p>
+    <div class="info-section">
+        <h2>📖 開発ストーリー & 活用ガイド</h2>
+        <ul class="note-link-list">
+            <li><a href="about.html">なぜこのツールを作ったのか（詳細版）</a></li>
+            <li><a href="features.html">機能と強みの解説</a></li>
+            <li><a href="ai-guide.html">AI活用ガイド（応用編）</a></li>
+            <li><a href="https://note.com/cool_toad2065/" target="_blank">公式Note（外部リンク）</a></li>
+        </ul>
     </div>
 
     <footer>
-        © 2026 M-Lab Apps | <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX6jh-6_EPE6UTPnoWgKQtzpDgxNK5wOM1fGVxdvf2APLW9g/viewform?usp=header">お問合せフォーム</a> | <a href="privacy.html">プライバシーポリシー</a>
+        <div style="margin-bottom: 15px;">
+            <a href="index.html">通常モード</a> | 
+            <a href="table.html">表形式モード</a> | 
+            <a href="about.html">開発ストーリー</a> | 
+            <a href="features.html">機能紹介</a> | 
+            <a href="ai-guide.html">AI活用術</a> | 
+            <a href="terms.html">利用規約</a> |
+            <a href="privacy.html">プライバシーポリシー</a>
+        </div>
+        <p>© 2026 M-Lab Apps. All Rights Reserved.</p>
     </footer>
-
 </body>
 </html>
