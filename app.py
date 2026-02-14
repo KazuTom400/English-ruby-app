@@ -131,14 +131,11 @@ if st.session_state['converted']:
     
     st.markdown("---")
     st.subheader("💾 Word形式で保存")
-    password = st.text_input("パスワードを入力してEnter", type="password")
-    
-    # Secretsから取得、なければデフォルト"test"
-    if password == st.secrets.get("PASSWORD", "test"):
-        st.success("認証成功")
-        st.download_button(
-            label="📄 Wordファイルをダウンロード",
-            data=st.session_state['html_content'],
-            file_name="ruby_print.doc",
-            mime="application/msword"
-        )
+   # パスワード入力なしで、即ダウンロードボタンを表示
+    st.success("作成が完了しました！下のボタンから保存できます。")
+    st.download_button(
+        label="📄 Wordファイルをダウンロード",
+        data=st.session_state['html_content'],
+        file_name="ruby_print.doc",
+        mime="application/msword"
+    )
