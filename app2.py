@@ -136,10 +136,11 @@ if 'table_content' in st.session_state:
     st.success("作成が完了しました！下のボタンから保存できます。")
     st.download_button(
         label="📄 Wordファイルをダウンロード",
-        data=st.session_state['html_content'],
+        data=st.session_state['table_content'],
         file_name="ruby_print.doc",
         mime="application/msword"
     )
+
 
 
 
