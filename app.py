@@ -135,7 +135,7 @@ if st.session_state['converted']:
     st.success("作成が完了しました！下のボタンから保存できます。")
    # --- 修正版：スマホでの破損を防ぐ設定 ---
     # UTF-8のBOM（プログラムが文字コードを正しく認識するための印）を先頭に付与します
-    bom_html = "\ufeff" + st.session_state['table_content']
+    bom_html = "\ufeff" + st.session_state['html_content']
 
     st.download_button(
         label="📄 Word形式（HTML）をダウンロード",
@@ -143,4 +143,5 @@ if st.session_state['converted']:
         file_name="ruby_print.doc", # ここはそのままでOK
         mime="text/html"            # ここを text/html に変えるのがスマホ対策のコツです
     )
+
 
