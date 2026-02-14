@@ -1,4 +1,11 @@
 import streamlit as st
+
+# --- ここを追加：session_stateの初期化 ---
+if 'html_content' not in st.session_state:
+    st.session_state['html_content'] = "" # 最初は空っぽにしておく
+# ---------------------------------------
+
+# その後の既存コード...
 import alkana
 import jaconv
 import streamlit.components.v1 as components
@@ -133,4 +140,5 @@ if 'table_content' in st.session_state:
         file_name="ruby_print.doc",
         mime="application/msword"
     )
+
 
