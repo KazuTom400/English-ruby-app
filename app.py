@@ -4,16 +4,14 @@ import jaconv
 import streamlit.components.v1 as components
 import re
 
-# ページ設定
+# 1. ページ設定とスタイル
 st.set_page_config(
-    page_title="英語ルビ振り文章作成ツール【通常モード】",
+    page_title="英語ルビ振り文章作成ツール",
     page_icon="📚",
     layout="centered"
 )
 
-# ---------------------------------------------------------
-# Google翻訳による誤変換を防ぐための設定
-# ---------------------------------------------------------
+# スタイル設定（変更なし）
 st.markdown("""
     <script>
         var html = window.parent.document.getElementsByTagName('html')[0];
@@ -26,7 +24,6 @@ st.markdown("""
     header {visibility: hidden;}
     footer {visibility: hidden;}
     .stDeployButton {display:none;}
-    
     html, body, [class*="css"], .stMarkdown, .stSlider, .stButton, .stTextArea {
         font-family: "UD デジタル 教科書体 NK-R", "UD Digi Kyokashotai NK-R", sans-serif !important;
     }
@@ -36,41 +33,48 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# セッション状態の初期化
 if 'html_content' not in st.session_state: st.session_state['html_content'] = ""
 if 'converted' not in st.session_state: st.session_state['converted'] = False
 
-# --- 賢いルビ振りロジック (修正版) ---
+# 2. 強化されたルビ振りロジック
 def get_kana_smart(word, custom_dict):
-    # すべて小文字にして判定
     lower_word = word.lower()
     
-    # 1. カスタム辞書に完全一致があるか (don't など)
+    # a) カスタム辞書（最優先）
     if lower_word in custom_dict:
         return custom_dict[lower_word]
     
-    # 2. alkanaで取得できるか
+    # b) alkana で直接ヒット
     kana = alkana.get_kana(lower_word)
-    if kana:
-        return kana
+    if kana: return kana
     
-    # 3. アポストロフィを含む短縮形 (doesn't, she's など) の分解処理
+    # c) 語尾変化への対応 (死角1, 2対応)
+    # 進行形 -ing
+    if lower_word.endswith("ing") and len(lower_word) > 5:
+        stem = lower_word[:-3]
+        # eを取る(making) or 重複末尾(running) への簡易対応
+        for s in [stem, stem + "e", stem[:-1]]:
+            res = alkana.get_kana(s)
+            if res: return res + "イング"
+            
+    # 過去形 -ed
+    if lower_word.endswith("ed") and len(lower_word) > 3:
+        stem = lower_word[:-2] if lower_word.endswith("ed") else lower_word[:-1]
+        for s in [stem, stem + "e", stem[:-1]]:
+            res = alkana.get_kana(s)
+            if res: return res + "ド"
+
+    # d) アポストロフィ分解 (she's -> she + 's)
     if "'" in lower_word:
         parts = lower_word.split("'")
         prefix = parts[0]
         suffix = "'" + parts[1]
-        
-        # 前半（does）と後半（'t）をそれぞれ変換して合体
         p_kana = custom_dict.get(prefix) or alkana.get_kana(prefix)
         s_kana = custom_dict.get(suffix)
-        
-        if p_kana and s_kana:
-            return p_kana + s_kana
-        elif p_kana: # 後半が辞書にない場合は前半のみ
-            return p_kana
-
-    # 4. 複数形の処理
-    if lower_word.endswith("s") and len(lower_word) > 1:
+        if p_kana and s_kana: return p_kana + s_kana
+            
+    # e) 複数形 (既存ロジックを流用)
+    if lower_word.endswith("s") and len(lower_word) > 2:
         singular = lower_word[:-1]
         stem = custom_dict.get(singular) or alkana.get_kana(singular)
         if stem:
@@ -79,11 +83,11 @@ def get_kana_smart(word, custom_dict):
             
     return None
 
-# --- メイン UI ---
+# 3. メインUI
 st.markdown('<h1 class="notranslate" translate="no">📚 英語ルビ振り文章作成ツール</h1>', unsafe_allow_html=True)
 
-text_input = st.text_area("▼ ここに英文を入力してください", height=150, 
-                         value="She's my best friend. Tom's cat is cute. I don't like apples. He doesn't swim.")
+text_input = st.text_area("▼ 英文を入力（日本語混じり、iPhone15などもOK！）", height=150, 
+                         value="A cat is running. 私は iPhone15 を使って YouTube を見ています。")
 
 st.subheader("📏 レイアウト微調整")
 col1, col2 = st.columns(2)
@@ -93,67 +97,44 @@ with col1:
 with col2:
     line_height = st.slider("行の間隔（高さ）", 1.0, 4.0, 2.5, 0.1)
 
+# 4. 変換実行
 if st.button("ルビ付きテキストを作成する"):
     if text_input:
-        # カスタム辞書の拡充
         custom_dict = {
-            "i": "アイ", "my": "マイ", "me": "ミー", "mine": "マイン",
+            "a": "ア", "an": "アン", "the": "ザ", "i": "アイ", "my": "マイ", "me": "ミー", 
             "'s": "ズ", "'t": "ト", "n't": "ト", "'m": "ム", "'re": "アー", 
-            "'ve": "ブ", "'ll": "ル", "'d": "ド",
-            "don't": "ドーント", "doesn't": "ダズント", "can't": "キャント",
-            "isn't": "イズント", "aren't": "アーント", "won't": "ウォント"
+            "don't": "ドーント", "doesn't": "ダズント", "can't": "キャント", "youtube": "ユーチューブ"
         }
 
-        style = f"""
-            <style>
-                body {{
-                    font-family: 'UD デジタル 教科書体 NK-R', 'UD Digi Kyokashotai NK-R', serif;
-                    font-size: {font_size}pt;
-                    color: #000000;
-                    line-height: {line_height};
-                }}
-                ruby {{ ruby-align: center; }}
-                rt {{
-                    color: #000000;
-                    font-family: 'UD デジタル 教科書体 NK-R', sans-serif;
-                    font-size: {ruby_size}pt;
-                }}
-            </style>
-        """
+        style = f"<style>body {{ font-family: 'UD デジタル 教科書体 NK-R', sans-serif; font-size: {font_size}pt; line-height: {line_height}; background-color: transparent; }} ruby {{ ruby-align: center; }} rt {{ font-size: {ruby_size}pt; }}</style>"
         
-        html = f"""
-        <html xmlns:o='urn:schemas-microsoft-com:office:office' 
-              xmlns:w='urn:schemas-microsoft-com:office:word' 
-              lang="ja" class="notranslate" translate="no">
-        <head><meta charset='utf-8'>{style}</head>
-        <body><div class=WordSection1><p class=MsoNormal>
-        """
-        
-        # 処理ロジック
+        html_body = ""
         lines = text_input.split('\n')
         for line in lines:
-            # 修正した正規表現: 単語（アポストロフィ含む）か、記号かを分ける
-            words = re.findall(r"[a-zA-Z']+|[.,!?;:\"()\-]", line)
-            for word in words:
-                # 記号のみの場合
-                if re.match(r"^[.,!?;:\"()\-]$", word):
-                    html += f"<span>{word}</span> "
-                    continue
+            # 【死角4, 5への対策】
+            # re.findall ではなく re.split を使い、英数字+記号の塊を「抽出」しつつ、それ以外（日本語やスペース）を「保持」する
+            tokens = re.split(r"([a-zA-Z0-9'-]+)", line)
+            
+            for token in tokens:
+                if not token: continue
                 
-                # 単語の処理
-                kana = get_kana_smart(word, custom_dict)
-                if kana:
-                    z_kana = jaconv.h2z(kana)
-                    html += f'<ruby class="notranslate" translate="no"><rb>{word}</rb><rt>{z_kana}</rt></ruby> '
+                # 英単語・数字・ハイフンを含む塊の場合のみルビ判定
+                if re.match(r"[a-zA-Z0-9'-]+", token):
+                    kana = get_kana_smart(token, custom_dict)
+                    if kana:
+                        z_kana = jaconv.h2z(kana)
+                        html_body += f'<ruby><rb>{token}</rb><rt>{z_kana}</rt></ruby>'
+                    else:
+                        html_body += f"<span>{token}</span>"
                 else:
-                    html += f"<span>{word}</span> "
-            html += "<br>" 
+                    # 日本語、スペース、記号などはそのまま出力
+                    html_body += f"<span>{token}</span>"
+            html_body += "<br>"
 
-        html += "</p></div></body></html>"
-        st.session_state['html_content'] = html
+        st.session_state['html_content'] = f'<html lang="ja" class="notranslate" translate="no"><head><meta charset="utf-8">{style}</head><body>{html_body}</body></html>'
         st.session_state['converted'] = True
 
-# 3. 結果表示
+# 5. 表示とダウンロード
 if st.session_state['converted']:
     st.markdown("---")
     st.subheader("👀 プレビュー")
@@ -161,13 +142,5 @@ if st.session_state['converted']:
     
     st.markdown("---")
     st.subheader("💾 Word形式で保存")
-    st.success("作成が完了しました！下のボタンから保存できます。")
-    
     bom_html = "\ufeff" + st.session_state['html_content']
-
-    st.download_button(
-        label="📄 Word形式（HTML）をダウンロード",
-        data=bom_html,
-        file_name="ruby_print.doc",
-        mime="text/html"
-    )
+    st.download_button(label="📄 Word形式（HTML）をダウンロード", data=bom_html, file_name="ruby_text.doc", mime="text/html")
