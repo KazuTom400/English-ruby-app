@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-35R80B7L32"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-35R80B7L32');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://m-lab-apps.com/message-card.html">
+    
+    <title>一括メッセージカード作成ツール | M-Lab Apps</title>
+    <meta name="description" content="改行区切りのテキストからPDF形式のメッセージカードを自動生成。レイアウト最適化アルゴリズムにより、事務作業を圧倒的に効率化します。">
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1718411390072347" crossorigin="anonymous"></script>
+
+    <style>
+        body, html { margin: 0; padding: 0; background-color: #f9f4e6; font-family: sans-serif; overflow-x: hidden; }
+        .navbar { background-color: #5d4037; padding: 10px 0; position: sticky; top: 0; z-index: 1000; }
+        .nav-inner { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .nav-logo { color: white; text-decoration: none; font-weight: bold; font-size: 1.2rem; }
+        .nav-links { display: flex; gap: 15px; }
+        .nav-links a { color: #d7ccc8; text-decoration: none; font-size: 0.85rem; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: white; font-weight: bold; }
+
+        .app-container { width: 100%; height: 900px; border-bottom: 1px solid #d7ccc8; background-color: #ffffff; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .docs-section { background-color: #ffffff; padding: 60px 20px; border-bottom: 1px solid #d7ccc8; }
+        .docs-inner { max-width: 850px; margin: 0 auto; color: #5d4037; line-height: 1.8; }
+        .docs-inner h2 { font-size: 1.4rem; border-left: 5px solid #5d4037; padding-left: 15px; margin-bottom: 25px; }
+        .docs-inner h3 { font-size: 1.1rem; margin-top: 30px; }
+        
+        .tech-box { background-color: #f0f2f6; padding: 20px; border-radius: 10px; margin: 20px 0; border: 1px solid #d1d9e6; }
+        
+        .info-section { background-color: #fff8e1; padding: 30px 20px; text-align: center; color: #5d4037; }
+        .note-link-list { list-style: none; padding: 0; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .note-link-list li a { color: #8d6e63; text-decoration: none; font-size: 0.9rem; border-bottom: 1px solid #d7ccc8; }
+
+        footer { text-align: center; font-size: 11px; padding: 20px 0; border-top: 1px solid #d7ccc8; background: #f9f4e6; }
+        footer a { color: #8d6e63; text-decoration: none; margin: 0 15px; }
+
+        @media (max-width: 600px) {
+            .nav-inner { flex-direction: column; gap: 10px; }
+            .nav-links { flex-wrap: wrap; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">M-Lab Apps</a>
+            <div class="nav-links">
+                <a href="index.html">英語ルビ振り</a>
+                <a href="message-card.html" class="active">メッセージカード</a>
+                <a href="about.html">開発ストーリー</a>
+                <a href="features.html">機能紹介</a>
+                <a href="terms.html">利用規約</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <iframe src="https://YOUR-MESSAGE-CARD-APP-URL.streamlit.app/?embed=true"
+                allow="clipboard-read; clipboard-write; downloads;"
+                sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-downloads">
+        </iframe>
+    </div>
+
+    <section class="docs-section">
+        <div class="docs-inner">
+            <h2>自動レイアウト最適化による「贈る言葉」のDX</h2>
+            <p>本ツールは、卒業式やイベント等で大量に必要となるメッセージカード作成を、工学的アプローチで効率化するために開発されました。手書きやWordでの個別調整というアナログな作業を、<strong>Python(ReportLab)による動的PDF生成</strong>で自動化します。</p>
+
+            <h3>1. 開発の背景：教育現場の「時間」を取り戻す</h3>
+            <p>本プラットフォームの共通テーマである「教員の負担軽減」に基づき、100枚単位のカード作成を数分で完了させることを目指しています。機械的な作業をシステムに委ねることで、教員が「生徒に書く内容を考える」という本質的にクリエイティブな時間に集中できる環境を構築します。</p>
+
+            <div class="tech-box">
+                <h4>【技術仕様】Dynamic Resizing Algorithm</h4>
+                <p>本ツールには、限られたカード枠内にテキストを最適に配置するためのロジックが組み込まれています。</p>
+                <ul>
+                    <li><strong>自動縮小ロジック</strong>：入力された文字列の長さに応じて、設定された最大文字サイズから最小5ptまで、1pt刻みでフォントサイズを自動調整。枠内に100%収まるよう計算されます。</li>
+                    <li><strong>多ページ対応</strong>：A4サイズ1枚あたりの面付け数をミリ単位で計算し、100枚を超えるメッセージでも自動で改ページを行い、即座に印刷可能なPDFを出力します。</li>
+                </ul>
+            </div>
+
+            <h3>2. 認知的な統一感とデザインの整合性</h3>
+            <p>メッセージカードは、受け取る側にとっても読みやすさが重要です。本ツールではフォントサイズと行間のバランスを定数化することで、視覚的なノイズを排除。機械工学における「公差設計」のように、どのような文章量であっても一定の美しさを保つデザインを実現しています。</p>
+        </div>
+    </section>
+
+    <div class="info-section">
+        <h2>🛠️ 活用シーン</h2>
+        <ul class="note-link-list">
+            <li>卒業式・入学式の座席カード</li>
+            <li>英単語のオリジナル単語カード作成</li>
+            <li>セミナーや勉強会の名札作成</li>
+            <li>店舗でのサンクスカード一括発行</li>
+        </ul>
+    </div>
+
+    <footer>
+        <div style="margin-bottom: 15px;">
+            <a href="index.html">通常モード</a> | 
+            <a href="table.html">表形式モード</a> | 
+            <a href="message-card.html">メッセージカード</a> | 
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX6jh-6_EPE6UTPnoWgKQtzpDgxNK5wOM1fGVxdvf2APLW9g/viewform" target="_blank">お問い合わせ</a>
+        </div>
+        <p>© 2026 M-Lab Apps. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
