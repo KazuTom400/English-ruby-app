@@ -87,9 +87,6 @@ def get_kana_smart(word, custom_dict):
 
 # 3. メインUI
 st.markdown('<h1>📚 英語ルビ振り文章作成ツール</h1>', unsafe_allow_html=True)
-# --- 3. メインUI ---
-st.markdown('<h1>📚 英語ルビ振り文章作成ツール Pro</h1>', unsafe_allow_html=True)
-
 # 【ここを追加！】クローラー用の静的な説明文
 st.write("""
 英語のテキストに自動でカタカナのルビ（読み仮名）を振ることができるオンラインツールです。
@@ -101,11 +98,6 @@ with st.container():
     st.info("💡 使い方：下のボックスに英文を入力して、生成ボタンを押すだけでWord形式での保存も可能です。")
 
 # 入力エリア（既存のコード）
-default_text = "The system is running smoothly. It is a powerful and evergreen tool."
-text_input = st.text_area("▼ 英文を入力", height=150, value=default_text)
-
-# (以下、expanderなどのレイアウト設定はそのまま)
-
 default_text = "The system is running smoothly. It is a powerful and evergreen tool."
 text_input = st.text_area("▼ 英文を入力", height=150, value=default_text)
 
