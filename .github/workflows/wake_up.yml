@@ -2,9 +2,13 @@ name: Wake Up M-Lab Apps
 
 on:
   schedule:
-    # 6時間おきに実行（1日4回巡回）
+    # 6時間おきに実行
     - cron: '0 */6 * * *'
-  workflow_dispatch: # 手動実行ボタンを有効化
+  workflow_dispatch:
+
+# Node.js 24への強制移行を先取りする設定
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   wake-up-all:
@@ -16,11 +20,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # バージョンを 24 に引き上げ
+          node-version: '24'
 
       - name: Install Dependencies
         run: |
-          # npmを初期化し、ライブラリをインストール
           npm init -y
           npm install playwright
           npx playwright install-deps
@@ -34,7 +38,6 @@ jobs:
             const browser = await chromium.launch();
             const page = await browser.newPage();
             
-            // 記憶した2つのURL
             const apps = [
               'https://english-ruby-app-5cbmsbsnyfjzf7fydhusza.streamlit.app/', 
               'https://english-ruby-app-appgr9gzfsoxqjw9ngdeeqb.streamlit.app/'
@@ -43,16 +46,14 @@ jobs:
             for (const url of apps) {
               console.log('--- Visiting: ' + url + ' ---');
               try {
-                // タイムアウトを60秒に設定
                 await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-                await page.waitForTimeout(10000); // 描画まで少し待機
+                await page.waitForTimeout(10000);
                 
-                // 'Wake up' ボタンを探してクリック
                 const button = page.getByRole('button', { name: /Wake up/i });
                 if (await button.isVisible()) {
                   console.log('Result: App is sleeping. Clicking Wake up button...');
                   await button.click();
-                  await page.waitForTimeout(20000); // 起動処理待ち
+                  await page.waitForTimeout(20000);
                   console.log('Result: Wake up signal sent.');
                 } else {
                   console.log('Result: App is already awake.');
