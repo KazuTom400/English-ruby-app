@@ -1,0 +1,61 @@
+name: Wake Up M-Lab Apps
+
+on:
+  schedule:
+    # 6時間おきに実行（1日4回巡回）
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # 手動実行ボタンを有効化
+
+jobs:
+  wake-up-all:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Playwright
+        run: |
+          npx playwright install-deps
+          npx playwright install chromium
+
+      - name: Run Wake Up Script
+        run: |
+          node -e "
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch();
+            const page = await browser.newPage();
+            
+            // 起こしたいアプリのURLをリスト化
+            const apps = [
+              'https://english-ruby-app-5cbmsbsnyfjzf7fydhusza.streamlit.app/', 
+              'https://english-ruby-app-appgr9gzfsoxqjw9ngdeeqb.streamlit.app/'
+            ];
+
+            for (const url of apps) {
+              console.log('--- Visiting: ' + url + ' ---');
+              try {
+                await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
+                await page.waitForTimeout(5000); // 画面描画待ち
+                
+                // 'Wake up' ボタンを探す
+                const button = page.getByRole('button', { name: /Wake up/i });
+                
+                if (await button.isVisible()) {
+                  console.log('Result: App is sleeping. Clicking Wake up button...');
+                  await button.click();
+                  // 起動処理を待つ（30秒程度）
+                  await page.waitForTimeout(30000);
+                  console.log('Result: Wake up signal sent.');
+                } else {
+                  console.log('Result: App is already awake.');
+                }
+              } catch (error) {
+                console.error('Error visiting ' + url + ': ' + error.message);
+              }
+            }
+            await browser.close();
+          })();
+          "
